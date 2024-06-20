@@ -1,0 +1,24 @@
+{
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+
+    "complete": "Complete",
+    "cancel": "Cancel",
+
+    "total": "Total",
+    "discount": "Discount",
+
+    "success": "Success",
+    "fail": "Fail",
+
+    "confirmation": "Confirmation",
+    "action_confirm": "Are you sure to {{action}}{{item}}?",
+    "yes": "Yes",
+    "no": "No",
+    "call": "Call",
+    "required_error": "This field is required!",
+    "detail": "Detail"
+  }
+}
