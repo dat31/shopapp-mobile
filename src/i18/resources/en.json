@@ -1,0 +1,14 @@
+{
+  "common": {
+    "add": "Add",
+    "total": "Total",
+    "discount": "Discount",
+    "complete": "Complete",
+    "cancel": "Cancel",
+    "confirmation": "Confirmation",
+    "delete": "Delete",
+    "action_confirm": "Are you sure to {{action}}{{item}}?",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
