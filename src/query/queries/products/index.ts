@@ -10,7 +10,7 @@ export function useProductsQuery(options: UseQueryOptions<Category[]>) {
   return useQuery({
     queryKey: QUERY_KEY,
     queryFn: async () =>
-      service.get<Category[]>('/categories').then(({ data }) => data),
+      service.get<Category[]>('/categories/products').then(({ data }) => data),
     ...options,
   });
 }

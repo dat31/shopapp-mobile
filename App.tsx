@@ -6,6 +6,8 @@ import { createStore } from 'zustand';
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { io } from 'socket.io-client';
+import { AppState } from 'react-native';
 
 enableScreens(true);
 
@@ -37,7 +39,24 @@ const theme = createTheme({
 });
 
 function App(): React.JSX.Element {
-  useEffect(() => {});
+  useEffect(() => {
+    const ws = io('http://10.0.2.2:3000');
+    ws.on('connect', () => {
+      console.log('connect');
+    });
+    ws.on('events', data => {
+      console.log(data);
+    });
+    ws.on('disconnect', () => {
+      console.log('disconnect');
+    });
+    AppState.addEventListener('change', state => {
+      if (state === 'background') {
+        console.log(ws.active);
+        ws.connect();
+      }
+    });
+  }, []);
 
   return (
     <RootSiblingParent>

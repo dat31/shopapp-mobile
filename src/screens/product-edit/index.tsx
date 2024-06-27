@@ -1,12 +1,15 @@
 import { FullScreenLoading, View } from '@/components';
 import { Product } from '@/models/Product';
 import { StackParamList } from '@/navigator/product-stacks';
-import { useUpdateProdMutation } from '@/query/mutations/products';
+import {
+  useCreateProdMutation,
+  useUpdateProdMutation,
+} from '@/query/mutations/products';
 import { useProductDetailQuery } from '@/query/queries/products';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Image, Input, makeStyles } from '@rneui/themed';
 import { useFormik } from 'formik';
-import { ScrollView } from 'react-native';
+import { ScrollView, TouchableHighlight } from 'react-native';
 import Toast from 'react-native-root-toast';
 import * as Yup from 'yup';
 
@@ -19,36 +22,45 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function ProductEdit({ route, navigation }: Props) {
-  const { productId } = route.params;
-  const { mutate, isLoading: isLoadingUpdateProd } = useUpdateProdMutation({});
+  const { productId } = route.params || {};
+  const { mutate, isLoading: isLoadingUpdateProd } = useUpdateProdMutation();
+  const { mutate: createProdMutate, isLoading: isLoadingCreateProd } =
+    useCreateProdMutation();
   const { handleChange, handleBlur, handleSubmit, setValues, values } =
-    useFormik<Partial<Product>>({
-      initialValues: {},
+    useFormik<Product>({
+      initialValues: {} as Product,
       validationSchema,
       onSubmit(values) {
-        mutate(values, {
+        if (values.id) {
+          mutate(values, {
+            onSuccess() {
+              navigation.popToTop();
+              Toast.show('Update success');
+            },
+          });
+          return;
+        }
+
+        createProdMutate(values, {
           onSuccess() {
             navigation.popToTop();
-            Toast.show('Update success');
+            Toast.show('Create success');
           },
         });
       },
     });
 
-  const { data, isLoading } = useProductDetailQuery(productId, {
+  const { isLoading } = useProductDetailQuery(productId as number, {
     onSuccess(data) {
       setValues(data);
     },
+    enabled: Boolean(productId),
   });
 
   const styles = useStyles();
 
   if (isLoading) {
     return <FullScreenLoading />;
-  }
-
-  if (!data) {
-    return null;
   }
 
   const { name, description, price } = values;
@@ -83,6 +95,7 @@ export default function ProductEdit({ route, navigation }: Props) {
           keyboardType="decimal-pad"
           value={price?.toString()}
         />
+
         <View ph-md>
           <Button
             disabled={isLoadingUpdateProd}

@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Input } from '@rneui/themed';
 import { useFormik } from 'formik';
 import i18next from 'i18next';
+import { isEqual } from 'lodash';
 import Toast from 'react-native-root-toast';
 import * as yup from 'yup';
 
@@ -19,25 +20,44 @@ const validationSchema = yup.object().shape({
 
 function EmployeeEdit({ route, navigation }: Props) {
   const { mutate } = useUpdateEmployeeMutation();
-  const { handleBlur, handleChange, setValues, values, handleSubmit, errors } =
-    useFormik<User>({
-      initialValues: {
-        name: '',
-        phone: '',
-      } as User,
-      validationSchema,
-      onSubmit(values) {
-        mutate(values, {
-          onSuccess() {
-            Toast.show('Update success');
-            navigation.popToTop();
-          },
-        });
-      },
-      validateOnMount: false,
-    });
+  const {
+    handleBlur,
+    handleChange,
+    setValues,
+    values,
+    handleSubmit,
+    errors,
+    setFormikState,
+    status,
+  } = useFormik<User>({
+    initialValues: {
+      name: '',
+      phone: '',
+    } as User,
+    validationSchema,
+    onSubmit(values) {
+      if (isEqual(status.initialData, values)) {
+        return navigation.popToTop();
+      }
+      mutate(values, {
+        onSuccess() {
+          Toast.show('Update success');
+          navigation.popToTop();
+        },
+      });
+    },
+    validateOnMount: false,
+  });
   useEmployeeDetailQuery(route.params.id, {
-    onSuccess: setValues,
+    onSuccess(data) {
+      setFormikState(state => ({
+        ...state,
+        status: {
+          initialData: data,
+        },
+      }));
+      setValues(data);
+    },
   });
   const { name, phone } = values;
   return (

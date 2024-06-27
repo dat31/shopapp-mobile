@@ -16,8 +16,6 @@ export const useProductStore = create<State>()(
     filteredProducts: [],
     products: [],
     onFilter(text) {
-      console.log('onFilter', text);
-
       if (text === '') {
         set({ filteredProducts: get().products });
         return;

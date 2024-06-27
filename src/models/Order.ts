@@ -19,4 +19,5 @@ export type OrderItem = {
   product: Product;
   quantity: number;
   price: Product['price'];
+  order: Pick<Order, 'id'>;
 };

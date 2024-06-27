@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { UseMutationOptions, useMutation, useQueryClient } from 'react-query';
 
 export default function useUpdateProdMutation(
-  options: UseMutationOptions<
+  options?: UseMutationOptions<
     AxiosResponse<Product>,
     AxiosError,
     Partial<Product>

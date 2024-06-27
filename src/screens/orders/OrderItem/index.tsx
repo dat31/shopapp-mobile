@@ -1,5 +1,6 @@
 import { Order, Status } from '@/models/Order';
-import { Avatar, ListItem, makeStyles } from '@rneui/themed';
+import formatCurrency from '@/utils/format-currency';
+import { Avatar, ListItem, Text, makeStyles } from '@rneui/themed';
 import { format } from 'date-fns';
 import { TouchableHighlight } from 'react-native';
 
@@ -13,6 +14,7 @@ function OrderItem({ item, onPress }: Props) {
 
   return (
     <ListItem
+      bottomDivider
       Component={TouchableHighlight}
       onPress={() => {
         onPress(item);
@@ -26,16 +28,16 @@ function OrderItem({ item, onPress }: Props) {
         <ListItem.Title>
           {format(new Date(item.orderDate), 'HH:mm')}
         </ListItem.Title>
-        <ListItem.Subtitle style={styles.status}>
-          {item.status}
+        <ListItem.Subtitle>
+          {formatCurrency(
+            item.items?.reduce(
+              (acc, item) => acc + item.price * item.quantity,
+              0,
+            ),
+          )}
         </ListItem.Subtitle>
       </ListItem.Content>
-      <ListItem.Chevron
-        style={styles.chevron}
-        onPress={() => {
-          console.log('press');
-        }}
-      />
+      <Text style={styles.status}>{item.status}</Text>
     </ListItem>
   );
 }
@@ -61,10 +63,13 @@ const useStyles = makeStyles((theme, status: Order['status']) => {
     },
     status: {
       backgroundColor: getBgColor(),
-      paddingHorizontal: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.xs,
       color: theme.colors.white,
-      borderRadius: theme.spacing.xs,
+      borderRadius: theme.spacing.lg,
       marginTop: theme.spacing.xs,
+      fontSize: 14,
+      alignSelf: 'flex-start',
     },
     chevron: {
       padding: theme.spacing.sm,

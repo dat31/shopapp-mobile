@@ -15,7 +15,7 @@ export type StackParamList = {
     orderItem?: OrderItem;
     orderId?: Order['id'];
   };
-  ProductEdit: { productId: Product['id'] };
+  ProductEdit?: { productId: Product['id'] };
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();

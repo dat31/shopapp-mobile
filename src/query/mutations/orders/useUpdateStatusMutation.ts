@@ -9,7 +9,6 @@ export default function useUpdateStatusMutation() {
   const client = useQueryClient();
   return useMutation<AxiosResponse<Order>, AxiosError, Partial<Order>>({
     mutationFn({ id, status }) {
-      console.log({ id, status });
       if (status === Status.CANCELED) {
         return service.patch(`/orders/cancel/${id}`);
       }

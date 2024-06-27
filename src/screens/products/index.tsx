@@ -1,5 +1,5 @@
 import { Product } from '@/models/Product';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, makeStyles, useTheme } from '@rneui/themed';
 import { StackParamList } from '@/navigator/product-stacks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -10,9 +10,9 @@ import {
   useDecreaseQtyMutation,
   useIncreaseQtyMutation,
 } from '@/query/mutations/order-items';
-import { FullScreenLoading, ProductList, View } from '@/components';
+import { FullScreenLoading, IconButton, ProductList, View } from '@/components';
 import { useProductStore } from './store';
-import { debounce } from 'lodash';
+import { Header, getHeaderTitle } from '@react-navigation/elements';
 
 type Props = {} & NativeStackScreenProps<StackParamList, 'Products'>;
 
@@ -29,9 +29,8 @@ function Products({ navigation, route }: Props) {
   );
   const { data: order } = useOrderDetailQuery(orderId as number) || {};
   const styles = useStyles();
-  const {
-    theme: { colors },
-  } = useTheme();
+  const { theme } = useTheme();
+  const { colors } = theme;
   const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
 
@@ -68,7 +67,27 @@ function Products({ navigation, route }: Props) {
 
   useEffect(() => {
     setOptions({
+      // header({ options, route }) {
+      //   return (
+      //     <Header
+      //       {...(options as any)}
+      //       title={getHeaderTitle(options, route.name)}
+      //       headerRight={({ tintColor }) => (
+      //         <View row pr-md>
+      //           <IconButton
+      //             name="search"
+      //             color={tintColor}
+      //             onPress={() => {}}
+      //           />
+      //         </View>
+      //       )}
+      //     />
+      //   );
+      // },
+
       headerSearchBarOptions: {
+        hideNavigationBar: true,
+        hideWhenScrolling: true,
         headerIconColor: colors.white,
         textColor: colors.white,
         shouldShowHintSearchIcon: false,
@@ -107,7 +126,15 @@ function Products({ navigation, route }: Props) {
           }}>
           OK
         </Button>
-      ) : null}
+      ) : (
+        <Button
+          onPress={() => {
+            navigate('ProductEdit');
+          }}
+          containerStyle={styles.okButton}>
+          add
+        </Button>
+      )}
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import { Text, makeStyles } from '@rneui/themed';
-import { SectionList, SectionListData } from 'react-native';
+import { SectionList, SectionListData, SectionListProps } from 'react-native';
 import ProductItem from './ProductItem';
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
@@ -13,7 +13,7 @@ type Props = {
   decreaseQty?: ItemCb;
   isOrder?: boolean;
   getQty?: (prod: Product) => number;
-};
+} & Omit<SectionListProps<Product, Category>, 'sections'>;
 
 function ProductList({
   data,
@@ -22,6 +22,7 @@ function ProductList({
   increaseQty,
   decreaseQty,
   isOrder,
+  ...props
 }: Props) {
   const styles = useStyles();
   return (
@@ -35,7 +36,7 @@ function ProductList({
         );
       }}
       sections={
-        data.map(({ products: data, ...cat }) => ({
+        data.map(({ products: data, ...cat }: Category) => ({
           ...cat,
           data,
         })) as unknown as SectionListData<Product, Category>[]
@@ -52,6 +53,7 @@ function ProductList({
           />
         );
       }}
+      {...props}
     />
   );
 }

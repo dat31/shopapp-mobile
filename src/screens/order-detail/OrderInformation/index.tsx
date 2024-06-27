@@ -9,7 +9,6 @@ type Props = {
 
 function OrderInformation({ order }: Props) {
   const styles = useStyles();
-  console.log(order);
   return (
     <>
       <View p-lg style={styles.root}>

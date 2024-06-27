@@ -2,5 +2,6 @@
   "[typescript]": {
     "editor.formatOnPaste": false,
     "editor.formatOnSave": true
-  }
+  },
+  "i18n-ally.localesPaths": ["D:/hello/shopapp/MobileApp2/src/i18/resources"]
 }
