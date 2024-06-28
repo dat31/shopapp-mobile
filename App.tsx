@@ -9,6 +9,7 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import { io } from 'socket.io-client';
 import { AppState } from 'react-native';
 import notifee from '@notifee/react-native';
+import { requestUserPermission } from '@/services/fcm';
 
 enableScreens(true);
 
@@ -60,6 +61,7 @@ function App(): React.JSX.Element {
   }, []);
 
   useEffect(() => {
+    requestUserPermission();
     async function onDisplayNotification() {
       const channelId = await notifee.createChannel({
         id: 'default',

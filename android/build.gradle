@@ -1,5 +1,6 @@
 buildscript {
     ext {
+
         buildToolsVersion = "34.0.0"
         minSdkVersion = 21
         compileSdkVersion = 34
@@ -15,8 +16,29 @@ buildscript {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath 'com.google.gms:google-services:4.4.2'
     }
 }
+
+project.ext {
+  set('react-native', [
+    versions: [
+      // Overriding Build/Android SDK Versions
+      android : [
+        minSdk    : 21, // 23+ if using auth module
+        targetSdk : 33,
+        compileSdk: 34,
+      ],
+
+      // Overriding Library SDK Versions
+      firebase: [
+        // Override Firebase SDK Version
+        bom           : "33.1.0"
+      ],
+    ],
+  ])
+}
+
 allprojects {
   // other items
   repositories {
@@ -27,4 +49,5 @@ allprojects {
     }
   }
 }
+
 apply plugin: "com.facebook.react.rootproject"
