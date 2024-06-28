@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { io } from 'socket.io-client';
 import { AppState } from 'react-native';
+import notifee from '@notifee/react-native';
 
 enableScreens(true);
 
@@ -56,6 +57,24 @@ function App(): React.JSX.Element {
         ws.connect();
       }
     });
+  }, []);
+
+  useEffect(() => {
+    async function onDisplayNotification() {
+      const channelId = await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+      });
+      await notifee.displayNotification({
+        title: 'Notification Title',
+        body: 'Body of the notification',
+        android: {
+          channelId,
+          // smallIcon: 'small-icon',
+        },
+      });
+    }
+    onDisplayNotification();
   }, []);
 
   return (

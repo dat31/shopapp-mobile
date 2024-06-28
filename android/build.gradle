@@ -17,5 +17,14 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
     }
 }
-
+allprojects {
+  // other items
+  repositories {
+    // existing local repositories defined
+    // ADD THIS BLOCK
+    maven {
+      url "$rootDir/../node_modules/@notifee/react-native/android/libs"
+    }
+  }
+}
 apply plugin: "com.facebook.react.rootproject"

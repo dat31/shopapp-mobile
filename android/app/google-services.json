@@ -1,0 +1,33 @@
+{
+  "project_info": {
+    "project_number": "695978425765",
+    "project_id": "shopapp-407104",
+    "storage_bucket": "shopapp-407104.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695978425765:android:83442a7cb3b79c8ea9bc4c",
+        "android_client_info": {
+          "package_name": "com.mobileapp2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQROgPE-is6W-uS8_pMnkssuFr7lPH3ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1",
+  "react-native": {
+    "android_task_executor_maximum_pool_size": 10,
+    "android_task_executor_keep_alive_seconds": 3
+  }
+}
