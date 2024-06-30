@@ -18,7 +18,9 @@
     "yes": "Yes",
     "no": "No",
     "call": "Call",
-    "required_error": "This field is required!",
     "detail": "Detail"
+  },
+  "errors": {
+    "required_error": "This field is required!"
   }
 }
