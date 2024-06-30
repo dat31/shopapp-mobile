@@ -1,19 +1,29 @@
-import {MMKV} from 'react-native-mmkv';
-import {StateStorage} from 'zustand/middleware';
+import { User } from '@/models/User';
+import { MMKV } from 'react-native-mmkv';
 
-export const storage = new MMKV();
+export const mmkv = new MMKV();
 
-export const zustandStorage: StateStorage = {
-  setItem: (name, value) => {
-    return storage.set(name, value);
+export default {
+  setUser(user: User) {
+    return mmkv.set('user', JSON.stringify(user));
   },
-  getItem: name => {
-    const value = storage.getString(name);
-    return value ?? null;
+  removeUser() {
+    return mmkv.delete('user');
   },
-  removeItem: name => {
-    return storage.delete(name);
+  getUser() {
+    const user = mmkv.getString('user');
+    if (!user) {
+      return;
+    }
+    return JSON.parse(user);
+  },
+  getToken() {
+    return mmkv.getString('token');
+  },
+  removeToken() {
+    return mmkv.delete('token');
+  },
+  setToken(token: string) {
+    return mmkv.set('token', token);
   },
 };
-
-storage.set('user', JSON.stringify({name: 'dat'}));

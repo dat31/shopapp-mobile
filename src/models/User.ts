@@ -11,3 +11,5 @@ export enum Role {
   WAITER = 'WAITER',
   CHEF = 'CHEF',
 }
+
+export type SignInRequest = Pick<User, 'username'> & { password: string };
