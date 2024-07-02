@@ -13,7 +13,6 @@ const { Navigator, Screen } = createNativeStackNavigator<StackParamList>();
 
 function RootNav() {
   const { data: user } = useUser();
-
   return (
     <NavigationContainer>
       <Navigator

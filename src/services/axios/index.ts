@@ -1,5 +1,6 @@
 import axios, { HttpStatusCode } from 'axios';
-import storage from './storage';
+import storage from '../storage';
+import queryClient from '@/query';
 
 export const service = axios.create({
   baseURL: 'http://10.0.2.2:3000',
@@ -21,6 +22,7 @@ service.interceptors.response.use(
     if (error.response?.status === HttpStatusCode.Unauthorized) {
       storage.removeUser();
       storage.removeToken();
+      queryClient.setQueryData('auth', () => null);
     }
 
     return Promise.reject(error);

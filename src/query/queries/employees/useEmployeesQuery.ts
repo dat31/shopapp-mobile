@@ -1,5 +1,5 @@
 import { User } from '@/models/User';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
 

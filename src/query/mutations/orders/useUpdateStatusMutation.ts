@@ -1,6 +1,6 @@
 import { Order, Status } from '@/models/Order';
 import { QUERY_KEY } from '@/query/queries/orders';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import { AxiosError, AxiosResponse } from 'axios';
 import { produce } from 'immer';
 import { useMutation, useQueryClient } from 'react-query';

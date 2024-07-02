@@ -10,6 +10,7 @@ import { io } from 'socket.io-client';
 import { AppState } from 'react-native';
 import notifee from '@notifee/react-native';
 import { requestUserPermission } from '@/services/fcm';
+import queryClient from '@/query';
 
 enableScreens(true);
 
@@ -39,7 +40,6 @@ const theme = createTheme({
     },
   },
 });
-
 function App(): React.JSX.Element {
   useEffect(() => {
     const ws = io('http://10.0.2.2:3000');
@@ -81,7 +81,7 @@ function App(): React.JSX.Element {
 
   return (
     <RootSiblingParent>
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <Ctx.Provider value={store}>
             <SafeAreaProvider>

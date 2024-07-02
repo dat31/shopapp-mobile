@@ -1,6 +1,6 @@
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import { AxiosError } from 'axios';
 import { UseQueryOptions, useQuery } from 'react-query';
 

@@ -13,6 +13,7 @@ import {
 import { FullScreenLoading, IconButton, ProductList, View } from '@/components';
 import { useProductStore } from './store';
 import { Header, getHeaderTitle } from '@react-navigation/elements';
+import { SearchBar } from 'react-native-screens';
 
 type Props = {} & NativeStackScreenProps<StackParamList, 'Products'>;
 

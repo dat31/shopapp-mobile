@@ -1,5 +1,5 @@
 import { Order } from '@/models/Order';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import { useQuery } from 'react-query';
 
 export const QUERY_KEY = 'orders';

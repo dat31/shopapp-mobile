@@ -1,7 +1,7 @@
 import { User } from '@/models/User';
 import { UseQueryOptions, useQuery } from 'react-query';
 import { QUERY_KEY } from './useEmployeesQuery';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 
 export default function useEmployeeDetailQuery(
   id: User['id'],

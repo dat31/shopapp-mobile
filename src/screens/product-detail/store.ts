@@ -1,5 +1,5 @@
 import { Product } from '@/models/Product';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 

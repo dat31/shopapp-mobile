@@ -1,6 +1,6 @@
 import { User } from '@/models/User';
 import { QUERY_KEY } from '@/query/queries/employees/useEmployeesQuery';
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import { AxiosError } from 'axios';
 import { produce } from 'immer';
 import { useMutation, useQueryClient } from 'react-query';

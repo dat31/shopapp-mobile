@@ -1,4 +1,4 @@
-import { service } from '@/services';
+import { service } from '@/services/axios';
 import storage from '@/services/storage';
 import { useQuery } from 'react-query';
 
