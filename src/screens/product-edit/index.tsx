@@ -35,6 +35,7 @@ export default function ProductEdit({ route, navigation }: Props) {
     values,
     errors,
     touched,
+    submitCount,
   } = useFormik<Product>({
     initialValues: {} as Product,
     validationSchema: yup.object().shape({
@@ -86,11 +87,17 @@ export default function ProductEdit({ route, navigation }: Props) {
     });
   };
 
+  function getFieldError(field: keyof Product) {
+    return submitCount > 0 || touched[field] ? errors[field] : '';
+  }
+
   if (isLoading) {
     return <FullScreenLoading />;
   }
 
   const { name, description, price } = values;
+
+  console.log(getFieldError('name'));
 
   return (
     <ScrollView>
@@ -116,14 +123,14 @@ export default function ProductEdit({ route, navigation }: Props) {
           onChangeText={handleChange('name')}
           label="Name"
           value={name}
-          errorMessage={touched.name ? errors.name : ''}
+          errorMessage={getFieldError('name') as string}
         />
         <Input
           onBlur={handleBlur('description')}
           onChangeText={handleChange('description')}
           label="Description"
           value={description}
-          errorMessage={touched.description ? errors.description : ''}
+          errorMessage={getFieldError('description') as string}
         />
         <Input
           onBlur={handleBlur('price')}
@@ -131,7 +138,7 @@ export default function ProductEdit({ route, navigation }: Props) {
           label="Price"
           keyboardType="decimal-pad"
           value={price?.toString()}
-          errorMessage={touched.price ? errors.price : ''}
+          errorMessage={getFieldError('price') as string}
         />
         <View ph-md>
           <Button

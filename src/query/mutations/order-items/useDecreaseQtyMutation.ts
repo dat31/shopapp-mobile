@@ -21,33 +21,11 @@ export default function useDecreaseQtyMutation() {
       const currentQty = order.items[odItemIdx].quantity;
 
       if (currentQty === 1) {
-        // client.setQueryData(
-        //   [QUERY_KEY, odId],
-        //   produce<Order>(order => {
-        //     if (odItemIdx === -1) {
-        //       return;
-        //     }
-        //     order.items = order.items.filter(
-        //       item => item.id !== order.items[odItemIdx].id,
-        //     );
-        //   }),
-        // );
-
         return service.delete(`/order-items/${order?.items[odItemIdx].id}`);
       }
 
-      // client.setQueryData(
-      //   [QUERY_KEY, odId],
-      //   produce<Order>(order => {
-      //     if (odItemIdx === -1) {
-      //       return;
-      //     }
-      //     order.items[odItemIdx].quantity = order.items[odItemIdx].quantity - 1;
-      //   }),
-      // );
-
       return service.patch(`/order-items/${order?.items[odItemIdx].id}`, {
-        ...odItem,
+        ...order.items[odItemIdx],
         quantity: order.items[odItemIdx].quantity - 1,
       });
     },
@@ -60,17 +38,23 @@ export default function useDecreaseQtyMutation() {
             if (!order) {
               return;
             }
-            const item = order.items.find(i => i.id === odItem.id);
+            const item = order.items.find(
+              i => i.product.id === odItem.product.id,
+            );
             if (!item) {
               return;
             }
-            order.items = order.items.filter(item => item.id === odItem.id);
+            order.items = order.items.filter(
+              item => item.product.id === odItem.product.id,
+            );
           }),
         );
         client.setQueryData(
           [QUERY_KEY, odId],
           produce<Order>(order => {
-            order.items = order.items.filter(item => item.id !== odItem.id);
+            order.items = order.items.filter(
+              item => item.product.id !== odItem.product.id,
+            );
           }),
         );
         return;
@@ -79,7 +63,9 @@ export default function useDecreaseQtyMutation() {
       client.setQueryData(
         [QUERY_KEY, odId],
         produce<Order>(order => {
-          const item = order.items.find(i => i.id === odItem.id);
+          const item = order.items.find(
+            i => i.product.id === odItem.product.id,
+          );
           if (!item) {
             return;
           }
@@ -94,7 +80,9 @@ export default function useDecreaseQtyMutation() {
           if (!order) {
             return;
           }
-          const item = order.items.find(i => i.id === odItem.id);
+          const item = order.items.find(
+            i => i.product.id === odItem.product.id,
+          );
           if (!item) {
             return;
           }

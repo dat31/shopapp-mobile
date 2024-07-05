@@ -45,7 +45,7 @@ function ProductItem({
         <ListItem.Title>{name}</ListItem.Title>
         <ListItem.Subtitle>{formatCurrency(price)}</ListItem.Subtitle>
       </ListItem.Content>
-      {shouldDisplayQty && onDecrease && onIncrease ? (
+      {qty !== undefined && onDecrease && onIncrease ? (
         <QtyModifier
           qty={qty as number}
           onIncrease={() => onIncrease(item)}

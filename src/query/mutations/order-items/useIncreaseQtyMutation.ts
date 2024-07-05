@@ -21,15 +21,20 @@ export default function useIncreaseQtyMutation() {
       ) as number;
 
       if (odItemIdx === -1) {
-        return service.post(`/orders/items/${odId}`, odItem);
+        return service.post(`/orders/items/${odId}`, {
+          ...odItem,
+          quantity: 1,
+        });
       }
 
       return service.patch(`/order-items/${order?.items[odItemIdx].id}`, {
-        ...odItem,
+        ...order.items[odItemIdx],
         quantity: order.items[odItemIdx].quantity + 1,
       });
     },
     onSuccess({ data, status }, { odId }) {
+      console.log('increase success', data);
+
       if (status === HttpStatusCode.Created) {
         client.setQueryData(
           [QUERY_KEY, odId],

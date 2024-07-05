@@ -174,7 +174,7 @@ function OrderDetail({ route, navigation }: Props) {
           containerStyle={styles.addButton}
           onPress={() => {
             navigation.navigate('ProductStacks', {
-              screen: 'Products',
+              screen: 'OrderProducts',
               params: { orderId: order?.id },
             } as any);
           }}>

@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Icon,
@@ -28,6 +28,7 @@ import { useDeleteProdMutation } from '@/query/mutations/products';
 import {
   useDecreaseQtyMutation,
   useIncreaseQtyMutation,
+  useUpdateMutation,
 } from '@/query/mutations/order-items';
 import { useOrderDetailQuery } from '@/query/queries/orders';
 import { OrderItem } from '@/models/Order';
@@ -40,6 +41,7 @@ function ProductDetail(props: Props) {
     navigation: { setOptions, goBack, canGoBack, navigate, getParent },
   } = props;
 
+  const [note, setNote] = useState<string>();
   const { productId, orderItem, orderId } = route.params;
   const { data: product, isLoading: isLoadingProdDetail } =
     useProductDetailQuery(productId);
@@ -48,6 +50,9 @@ function ProductDetail(props: Props) {
   const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
   const { data: order, isLoading } = useOrderDetailQuery(orderId as number);
+  const { mutate: updateOrderItemMutate, isLoading: isLoadingUpdateItem } =
+    useUpdateMutation(orderId as number);
+
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -107,17 +112,50 @@ function ProductDetail(props: Props) {
       } as OrderItem,
     };
     if (qty === 1) {
-      Alert.alert('Confirmation', 'Are you sure', [
-        {
-          text: 'OK',
-          onPress: () => decreaseQtyMutate(request),
-        },
-        { text: 'Cancel' },
-      ]);
+      Alert.alert(
+        t('common.confirmation'),
+        t('common.action_confirm', {
+          action: t('common.delete'),
+          item: ` ${product?.name}`,
+        }),
+        [
+          {
+            text: t('common.ok'),
+            onPress: () =>
+              decreaseQtyMutate(request, {
+                onSuccess() {
+                  canGoBack() && goBack();
+                },
+              }),
+          },
+          { text: t('common.cancel') },
+        ],
+      );
     } else {
       decreaseQtyMutate(request);
     }
   }
+
+  function updateOrderItem() {
+    updateOrderItemMutate(
+      {
+        ...order?.items.find(item => item.product.id === orderItem?.product.id),
+        note,
+      },
+      {
+        onSuccess() {
+          canGoBack() && goBack();
+        },
+      },
+    );
+  }
+
+  useEffect(() => {
+    setNote(
+      order?.items.find(item => item.product.id === orderItem?.product.id)
+        ?.note || '',
+    );
+  }, [order?.items, orderItem]);
 
   if (isLoadingProdDetail || isLoading) {
     return <FullScreenLoading />;
@@ -155,7 +193,12 @@ function ProductDetail(props: Props) {
         {orderId ? (
           <>
             <View white mt-lg ph-lg pv-xl mb-lg>
-              <Input label="Note" />
+              <Input
+                value={note}
+                disabled={qty === 0}
+                onChangeText={setNote}
+                label="Note"
+              />
               <QtyModifier
                 onIncrease={() =>
                   increaseQtyMutate({
@@ -169,6 +212,11 @@ function ProductDetail(props: Props) {
                 qty={qty}
                 isLg
               />
+            </View>
+            <View p-lg>
+              <Button loading={isLoadingUpdateItem} onPress={updateOrderItem}>
+                {t('common.ok')}
+              </Button>
             </View>
           </>
         ) : null}

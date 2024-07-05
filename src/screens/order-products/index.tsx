@@ -6,23 +6,32 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { OrderItem } from '@/models/Order';
 import { useProductsQuery } from '@/query/queries/products';
 import { useOrderDetailQuery } from '@/query/queries/orders';
-import { FullScreenLoading, ProductList, View } from '@/components';
+import {
+  useDecreaseQtyMutation,
+  useIncreaseQtyMutation,
+} from '@/query/mutations/order-items';
+import { FullScreenLoading, IconButton, ProductList, View } from '@/components';
+import { Header, getHeaderTitle } from '@react-navigation/elements';
+import { SearchBar } from 'react-native-screens';
 import { useProductStore } from './store';
-import { useTranslation } from 'react-i18next';
 
-type Props = {} & NativeStackScreenProps<StackParamList, 'Products'>;
+type Props = {} & NativeStackScreenProps<StackParamList, 'OrderProducts'>;
 
-function Products({ navigation, route }: Props) {
+function OrderProducts({ navigation, route }: Props) {
   const { setProducts, filteredProducts, onFilter } = useProductStore();
   const { isLoading } = useProductsQuery({
     onSuccess: setProducts,
   });
   const { orderId, orderItemId } = (route.params || {}) as any;
-  const { navigate, setOptions } = navigation;
+  const { navigate, setOptions, goBack, canGoBack } = navigation;
+  const { data: order, isLoading: isLoadingOrder } =
+    useOrderDetailQuery(orderId as number) || {};
   const styles = useStyles();
   const { theme } = useTheme();
   const { colors } = theme;
-  const { t } = useTranslation();
+  const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
+  const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
+  const { items } = order || {};
 
   const onItemPress = useCallback(
     (product: Product) =>
@@ -33,6 +42,32 @@ function Products({ navigation, route }: Props) {
         orderId,
       }),
     [navigate, orderId, orderItemId],
+  );
+
+  const increaseQty = useCallback(
+    (product: Product) => {
+      increaseQtyMutate({
+        odId: orderId as number,
+        odItem: { product, id: orderItemId } as OrderItem,
+      });
+    },
+    [increaseQtyMutate, orderId, orderItemId],
+  );
+
+  const decreaseQty = useCallback(
+    (product: Product) => {
+      decreaseQtyMutate({
+        odId: orderId as number,
+        odItem: { product, id: orderItemId } as OrderItem,
+      });
+    },
+    [orderId, orderItemId, decreaseQtyMutate],
+  );
+
+  const getQty = useCallback(
+    (item: Product) =>
+      order?.items.find(od => od.product.id === item.id)?.quantity || 0,
+    [items],
   );
 
   useEffect(() => {
@@ -68,19 +103,30 @@ function Products({ navigation, route }: Props) {
     });
   }, [setOptions, colors]);
 
-  if (isLoading) {
+  if (!order) {
+    return null;
+  }
+
+  if (isLoading || isLoadingOrder) {
     return <FullScreenLoading />;
   }
 
   return (
     <View flex-1>
-      <ProductList data={filteredProducts} onItemPress={onItemPress} />
+      <ProductList
+        isOrder={true}
+        getQty={getQty}
+        data={filteredProducts}
+        onItemPress={onItemPress}
+        decreaseQty={decreaseQty}
+        increaseQty={increaseQty}
+      />
       <Button
+        containerStyle={styles.okButton}
         onPress={() => {
-          navigate('ProductEdit');
-        }}
-        containerStyle={styles.okButton}>
-        {t('common.add')}
+          canGoBack() && goBack();
+        }}>
+        OK
       </Button>
     </View>
   );
@@ -98,4 +144,4 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default Products;
+export default OrderProducts;

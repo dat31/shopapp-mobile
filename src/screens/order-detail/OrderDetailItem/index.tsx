@@ -3,15 +3,10 @@ import { OrderItem } from '@/models/Order';
 import confirmDelete from '@/utils/confirm-delete';
 import formatCurrency from '@/utils/format-currency';
 import { Avatar, Text } from '@rneui/base';
-import { Icon, ListItem, makeStyles, useTheme } from '@rneui/themed';
+import { ListItem, makeStyles, useTheme } from '@rneui/themed';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  NativeSyntheticEvent,
-  TouchableHighlight,
-  View,
-} from 'react-native';
+import { NativeSyntheticEvent, TouchableHighlight, View } from 'react-native';
 import ContextMenu, {
   ContextMenuOnPressNativeEvent,
 } from 'react-native-context-menu-view';
@@ -35,7 +30,7 @@ function OrderDetailItem({
 }: Props) {
   const styles = useStyles();
   const { theme } = useTheme();
-  const { product, quantity } = item;
+  const { product, quantity, note } = item;
   const { t } = useTranslation();
 
   function handleCtxMenu(
@@ -61,6 +56,7 @@ function OrderDetailItem({
       dropdownMenuMode={false}
       actions={[{ title: t('common.delete') }, { title: t('common.detail') }]}>
       <ListItem
+        bottomDivider
         onPress={() => {
           onPress(item);
         }}
@@ -70,7 +66,7 @@ function OrderDetailItem({
         Component={TouchableHighlight}>
         <Avatar
           containerStyle={styles.prodIcon}
-          size={40}
+          size={48}
           icon={{ name: 'tag', type: 'ionic' }}
         />
         <ListItem.Content>
@@ -80,6 +76,7 @@ function OrderDetailItem({
             onDecrease={() => onDecreaseQty(item)}
             onIncrease={() => onIncreaseQty(item)}
           />
+          <ListItem.Subtitle>{note}</ListItem.Subtitle>
         </ListItem.Content>
         <View style={{ alignItems: 'flex-end', gap: theme.spacing.sm }}>
           <Text>

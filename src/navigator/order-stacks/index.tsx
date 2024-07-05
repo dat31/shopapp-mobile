@@ -10,7 +10,7 @@ import ProductStacks, {
 export type StackParamList = {
   Orders: {};
   OrderDetail: { order: Order };
-  ProductStacks: PrdStackParamList & { Products: { orderId: number } };
+  ProductStacks: PrdStackParamList;
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();

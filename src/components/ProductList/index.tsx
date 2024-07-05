@@ -3,6 +3,7 @@ import { SectionList, SectionListData, SectionListProps } from 'react-native';
 import ProductItem from './ProductItem';
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
+import { memo } from 'react';
 
 type ItemCb = (prod: Product) => void;
 
@@ -58,7 +59,7 @@ function ProductList({
   );
 }
 
-export default ProductList;
+export default memo(ProductList);
 
 const useStyles = makeStyles(theme => ({
   sectionTitle: {

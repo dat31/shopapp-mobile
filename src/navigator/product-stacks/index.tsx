@@ -1,5 +1,6 @@
 import { Order, OrderItem } from '@/models/Order';
 import { Product } from '@/models/Product';
+import OrderProducts from '@/screens/order-products';
 import ProductDetail from '@/screens/product-detail';
 import ProductEdit from '@/screens/product-edit';
 
@@ -9,6 +10,9 @@ import { useTheme } from '@rneui/themed';
 
 export type StackParamList = {
   Products: {};
+  OrderProducts: {
+    orderId: Order['id'];
+  };
   ProductDetail: {
     productId: Product['id'];
     productName: Product['name'];
@@ -34,6 +38,7 @@ function ProductStacks() {
         headerShadowVisible: false,
       }}>
       <Stack.Screen name="Products" component={Products} />
+      <Stack.Screen name="OrderProducts" component={OrderProducts} />
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetail}
