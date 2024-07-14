@@ -6,3 +6,4 @@ export { default as Backdrop } from './Backdrop';
 export { default as FullScreenLoading } from './FullScreenLoading';
 export { default as ProductList } from './ProductList';
 export { default as Img } from './Img';
+export { default as PickerSelect } from './PickerSelect';

@@ -1,4 +1,5 @@
 import { Product } from './Product';
+import { User } from './User';
 
 export enum Status {
   CREATED = 'CREATED',
@@ -12,6 +13,8 @@ export type Order = {
   orderDate: string;
   status: Status;
   items: OrderItem[];
+  creator: User;
+  table: string;
 };
 
 export type OrderItem = {

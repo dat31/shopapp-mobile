@@ -9,7 +9,7 @@ import {
 import OrderDetailItem from './OrderDetailItem';
 import { Button, Icon, Text, makeStyles } from '@rneui/themed';
 import formatCurrency from '@/utils/format-currency';
-import { ListEmptyComponent, View } from '@/components';
+import { FullScreenLoading, ListEmptyComponent, View } from '@/components';
 import { useTranslation } from 'react-i18next';
 import OrderInformation from './OrderInformation';
 import { useOrderDetailQuery } from '@/query/queries/orders';
@@ -28,7 +28,7 @@ import Toast from 'react-native-root-toast';
 type Props = NativeStackScreenProps<StackParamList, 'OrderDetail'>;
 
 function OrderDetail({ route, navigation }: Props) {
-  const { order: orderParam } = route.params;
+  const { orderId } = route.params;
   const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
   const { mutate: updateStatusMutate } = useUpdateStatusMutation();
@@ -36,7 +36,7 @@ function OrderDetail({ route, navigation }: Props) {
 
   const { t } = useTranslation();
   const styles = useStyles();
-  const { data: order, isLoading } = useOrderDetailQuery(orderParam.id);
+  const { data: order, isLoading } = useOrderDetailQuery(orderId);
   const { items, id, status } = order || {};
   const { setOptions } = navigation;
 
@@ -72,6 +72,13 @@ function OrderDetail({ route, navigation }: Props) {
       { text: t('common.no') },
     ]);
   }, [updateStatusMutate, id]);
+
+  const edit = useCallback(() => {
+    if (!order) {
+      return;
+    }
+    navigation.navigate('OrderEdit', { orderId });
+  }, [order, navigation]);
 
   function onDecreaseQty(item: OrderItem) {
     if (item.quantity === 1) {
@@ -126,14 +133,19 @@ function OrderDetail({ route, navigation }: Props) {
             tintColor={tintColor as string}
             cancel={cancel}
             complete={complete}
+            edit={edit}
           />
         );
       },
     });
-  }, [setOptions, cancel, complete]);
+  }, [setOptions, cancel, complete, edit]);
+
+  if (isLoading) {
+    return <FullScreenLoading />;
+  }
 
   return (
-    <View white flex-1>
+    <View bg-white flex-1>
       <FlatList
         {...(order
           ? {

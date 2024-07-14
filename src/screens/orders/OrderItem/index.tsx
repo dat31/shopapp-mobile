@@ -19,11 +19,7 @@ function OrderItem({ item, onPress }: Props) {
       onPress={() => {
         onPress(item);
       }}>
-      <Avatar
-        title={item.id.toString()}
-        size={40}
-        containerStyle={styles.avt}
-      />
+      <Avatar title={item.table || '#'} size={40} containerStyle={styles.avt} />
       <ListItem.Content>
         <ListItem.Title>
           {format(new Date(item.orderDate), 'HH:mm')}

@@ -117,7 +117,7 @@ export default function ProductEdit({ route, navigation }: Props) {
           />
         </ContextMenu>
       </Img>
-      <View white ph-lg pv-xl style={{ gap: 16 }}>
+      <View bg-white ph-lg pv-xl style={styles.form}>
         <Input
           onBlur={handleBlur('name')}
           onChangeText={handleChange('name')}
@@ -175,6 +175,9 @@ const useStyles = makeStyles(theme => {
     },
     discardBtn: {
       marginBottom: theme.spacing.xl,
+    },
+    form: {
+      gap: theme.spacing.lg,
     },
   };
 });

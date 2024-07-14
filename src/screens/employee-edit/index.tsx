@@ -61,7 +61,7 @@ function EmployeeEdit({ route, navigation }: Props) {
   });
   const { name, phone } = values;
   return (
-    <View white ph-lg pv-xl>
+    <View bg-white ph-lg pv-xl>
       <Input
         onBlur={handleBlur('name')}
         onChangeText={handleChange('name')}

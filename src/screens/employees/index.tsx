@@ -1,12 +1,11 @@
 import { View } from '@/components';
 import useEmployeesQuery from '@/query/queries/employees/useEmployeesQuery';
 import { Avatar, ListItem, Text } from '@rneui/themed';
-import { FlatList, Linking, TouchableHighlight } from 'react-native';
+import { FlatList, TouchableHighlight } from 'react-native';
 import useStyles from './style';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StackParamList } from '@/navigator/employee-stacks';
 import { User } from '@/models/User';
-import ContextMenu from 'react-native-context-menu-view';
 import Menu from '../employee-detail/Menu';
 import confirmDelete from '@/utils/confirm-delete';
 import { useDeleteEmployeeMutation } from '@/query/mutations/employees';
@@ -23,6 +22,16 @@ function Employees({ navigation }: Props) {
     navigate('EmployeeDetail', { id: item.id, name: item.name });
   }
 
+  function onDelete(item: User) {
+    confirmDelete(() => {
+      mutate(item.id);
+    }, item.name);
+  }
+
+  function onEdit(item: User) {
+    navigate('EmployeeEdit', { id: item.id });
+  }
+
   return (
     <View>
       <FlatList
@@ -30,14 +39,8 @@ function Employees({ navigation }: Props) {
         renderItem={({ item }) => (
           <Menu
             phoneNum={item.phone as string}
-            onDelete={() => {
-              confirmDelete(() => {
-                mutate(item.id);
-              }, item.name);
-            }}
-            onEdit={() => {
-              navigate('EmployeeEdit', { id: item.id });
-            }}
+            onDelete={() => onDelete(item)}
+            onEdit={() => onEdit(item)}
             dropdownMenuMode={false}>
             <ListItem
               onLongPress={() => {

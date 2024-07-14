@@ -49,8 +49,15 @@ const useStyles = makeStyles((theme, { row, ...props }: Props) => {
   }, {});
 
   const bg = Object.keys(theme.colors).find(c =>
-    Object.keys(props).includes(c),
+    Object.keys(props).some(prop => {
+      if (prop === 'bg-white') {
+        console.log('ok', prop.includes(c));
+      }
+      return prop.includes(c);
+    }),
   );
+
+  console.log('bg', bg);
 
   const viewBgStyle = bg
     ? { backgroundColor: theme.colors[bg as keyof Colors] }

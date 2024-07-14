@@ -14,6 +14,7 @@ import { FullScreenLoading, IconButton, ProductList, View } from '@/components';
 import { Header, getHeaderTitle } from '@react-navigation/elements';
 import { SearchBar } from 'react-native-screens';
 import { useProductStore } from './store';
+import { useTranslation } from 'react-i18next';
 
 type Props = {} & NativeStackScreenProps<StackParamList, 'OrderProducts'>;
 
@@ -27,6 +28,7 @@ function OrderProducts({ navigation, route }: Props) {
   const { data: order, isLoading: isLoadingOrder } =
     useOrderDetailQuery(orderId as number) || {};
   const styles = useStyles();
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const { colors } = theme;
   const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
@@ -126,7 +128,7 @@ function OrderProducts({ navigation, route }: Props) {
         onPress={() => {
           canGoBack() && goBack();
         }}>
-        OK
+        {t('common.ok')}
       </Button>
     </View>
   );

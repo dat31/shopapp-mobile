@@ -57,9 +57,10 @@ function ProductDetail(props: Props) {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { name, price, description } = product || {};
-  const qty =
-    order?.items.find(item => item.product.id === orderItem?.product?.id)
-      ?.quantity || 0;
+  const activeItem = order?.items.find(
+    item => item.product.id === orderItem?.product?.id,
+  );
+  const qty = activeItem?.quantity || 0;
 
   const deleteProd = useCallback(() => {
     Alert.alert(
@@ -165,6 +166,8 @@ function ProductDetail(props: Props) {
     return null;
   }
 
+  console.log(activeItem);
+
   return (
     <KeyboardAvoidingView>
       <ScrollView>
@@ -192,7 +195,7 @@ function ProductDetail(props: Props) {
 
         {orderId ? (
           <>
-            <View white mt-lg ph-lg pv-xl mb-lg>
+            <View bg-white mt-lg ph-lg pv-xl mb-lg>
               <Input
                 value={note}
                 disabled={qty === 0}

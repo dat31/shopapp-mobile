@@ -1,20 +1,23 @@
 import { IconButton } from '@/components';
-import { Icon } from '@rneui/themed';
+import { useTranslation } from 'react-i18next';
 import ContextMenu from 'react-native-context-menu-view';
 
 type Props = {
   cancel: Function;
   complete: Function;
+  edit: Function;
   tintColor: string;
 };
 
-function Menu({ cancel, complete, tintColor }: Props) {
+function Menu({ cancel, complete, edit, tintColor }: Props) {
+  const { t } = useTranslation();
   return (
     <ContextMenu
       dropdownMenuMode={true}
       actions={[
-        { title: 'Cancel', icon: 'ellipsis-vertical-outline' },
-        { title: 'Complete', icon: 'ellipsis-vertical-outline' },
+        { title: t('common.cancel') },
+        { title: t('common.complete') },
+        { title: t('common.edit') },
       ]}
       onPress={e => {
         switch (e.nativeEvent.index) {
@@ -25,6 +28,9 @@ function Menu({ cancel, complete, tintColor }: Props) {
           case 1: {
             complete();
             break;
+          }
+          case 2: {
+            edit();
           }
           default:
             break;

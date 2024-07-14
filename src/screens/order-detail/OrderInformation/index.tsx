@@ -2,6 +2,7 @@ import { View } from '@/components';
 import { Order } from '@/models/Order';
 import { Text, makeStyles } from '@rneui/themed';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   order: Order;
@@ -9,36 +10,36 @@ type Props = {
 
 function OrderInformation({ order }: Props) {
   const styles = useStyles();
+  const { table, creator, orderDate, status } = order || {};
+  const { t } = useTranslation();
   return (
     <>
       <View p-lg style={styles.root}>
         <Text h4 style={styles.orderInfo}>
-          Information
+          {t('common.information')}
         </Text>
         <View row space-between>
-          <Text>Time:</Text>
-          <Text>
-            {format(new Date(order?.orderDate as string), 'MM/dd HH:mm')}
-          </Text>
+          <Text>{t('order.time')}</Text>
+          <Text>{format(new Date(orderDate as string), 'MM/dd HH:mm')}</Text>
         </View>
 
         <View row space-between>
-          <Text>Number: </Text>
-          <Text>{order?.id}</Text>
+          <Text>{t('order.table')} </Text>
+          <Text>{table}</Text>
         </View>
 
         <View row space-between>
-          <Text>Creator: </Text>
-          <Text>Waiter</Text>
+          <Text>{t('order.creator')} </Text>
+          <Text>{creator.name}</Text>
         </View>
 
         <View row space-between>
-          <Text>Status: </Text>
-          <Text>{order.status}</Text>
+          <Text>{t('order.status.label')} </Text>
+          <Text>{t(`order.status.${status.toLocaleLowerCase()}`)}</Text>
         </View>
       </View>
       <Text h4 style={[styles.orderInfo, styles.orderProds]}>
-        Products
+        {t('products.label')}
       </Text>
     </>
   );
@@ -58,7 +59,7 @@ const useStyles = makeStyles(({ colors, spacing }) => ({
     color: colors.primary,
   },
   orderProds: {
-    marginLeft: spacing.lg,
-    marginTop: spacing.md,
+    paddingLeft: spacing.lg,
+    marginTop: spacing.lg,
   },
 }));

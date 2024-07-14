@@ -32,9 +32,9 @@ export default function useIncreaseQtyMutation() {
         quantity: order.items[odItemIdx].quantity + 1,
       });
     },
-    onSuccess({ data, status }, { odId }) {
+    onSuccess({ data, status }, { odId, odItem }) {
       console.log('increase success', data);
-
+      console.log('oditem', odItem);
       if (status === HttpStatusCode.Created) {
         client.setQueryData(
           [QUERY_KEY, odId],

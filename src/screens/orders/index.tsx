@@ -12,7 +12,7 @@ function Orders({ navigation }: Props) {
   const { data } = useOrdersQuery();
 
   function onItemPress(item: Order) {
-    navigate('OrderDetail', { order: item });
+    navigate('OrderDetail', { orderId: item.id });
   }
 
   return (

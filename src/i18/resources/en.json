@@ -15,9 +15,27 @@
     "no": "No",
     "call": "Call",
     "detail": "Detail",
-    "ok": "Ok"
+    "ok": "Ok",
+    "discard": "Discard",
+    "information": "Information"
   },
   "errors": {
     "required_error": "This field is required!"
+  },
+  "order": {
+    "table": "Table",
+    "time": "Time",
+    "update-status-placeholder": "Choose status",
+    "creator": "Creator",
+    "status": {
+      "label": "Status",
+      "canceled": "Canceled",
+      "created": "Created",
+      "inprogress": "In-progress",
+      "completed": "Completed"
+    }
+  },
+  "products": {
+    "label": "Products"
   }
 }

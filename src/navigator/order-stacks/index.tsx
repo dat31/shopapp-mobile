@@ -6,10 +6,12 @@ import { useTheme } from '@rneui/themed';
 import ProductStacks, {
   StackParamList as PrdStackParamList,
 } from '../product-stacks';
+import OrderEdit from '@/screens/order-edit';
 
 export type StackParamList = {
   Orders: {};
-  OrderDetail: { order: Order };
+  OrderDetail: { orderId: Order['id'] };
+  OrderEdit: { orderId: Order['id'] };
   ProductStacks: PrdStackParamList;
 };
 
@@ -32,6 +34,7 @@ function OrderStacks() {
       }}>
       <Stack.Screen name="Orders" component={Orders} />
       <Stack.Screen name="OrderDetail" component={OrderDetail} />
+      <Stack.Screen name="OrderEdit" component={OrderEdit} />
       <Stack.Screen
         name="ProductStacks"
         component={ProductStacks}
