@@ -49,7 +49,14 @@ function ProductDetail(props: Props) {
     useDeleteProdMutation();
   const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
-  const { data: order, isLoading } = useOrderDetailQuery(orderId as number);
+  const { data: order, isLoading } = useOrderDetailQuery(orderId as number, {
+    onSuccess(data) {
+      setNote(
+        data?.items.find(item => item.product.id === orderItem?.product.id)
+          ?.note || '',
+      );
+    },
+  });
   const { mutate: updateOrderItemMutate, isLoading: isLoadingUpdateItem } =
     useUpdateMutation(orderId as number);
 
@@ -151,13 +158,6 @@ function ProductDetail(props: Props) {
     );
   }
 
-  useEffect(() => {
-    setNote(
-      order?.items.find(item => item.product.id === orderItem?.product.id)
-        ?.note || '',
-    );
-  }, [order?.items, orderItem]);
-
   if (isLoadingProdDetail || isLoading) {
     return <FullScreenLoading />;
   }
@@ -165,8 +165,6 @@ function ProductDetail(props: Props) {
   if (!product) {
     return null;
   }
-
-  console.log(activeItem);
 
   return (
     <KeyboardAvoidingView>

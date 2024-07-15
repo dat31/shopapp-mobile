@@ -4,6 +4,7 @@ import ProductItem from './ProductItem';
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type ItemCb = (prod: Product) => void;
 
@@ -26,13 +27,14 @@ function ProductList({
   ...props
 }: Props) {
   const styles = useStyles();
+  const { t } = useTranslation();
   return (
     <SectionList<Product, Category>
       keyExtractor={item => item.id.toString()}
       renderSectionHeader={({ section }) => {
         return (
           <Text bold h4 style={styles.sectionTitle}>
-            {section.name}
+            {section.name ?? t('category.uncategorized')}
           </Text>
         );
       }}

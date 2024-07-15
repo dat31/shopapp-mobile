@@ -24,6 +24,7 @@ import {
 } from '@/query/mutations/order-items';
 import useStyles from './style';
 import Toast from 'react-native-root-toast';
+import { useOrderStore } from '../orders/store';
 
 type Props = NativeStackScreenProps<StackParamList, 'OrderDetail'>;
 
@@ -33,6 +34,7 @@ function OrderDetail({ route, navigation }: Props) {
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
   const { mutate: updateStatusMutate } = useUpdateStatusMutation();
   const { mutate: deleteItemMutate } = useDeleteMutation();
+  const { setActiveItem } = useOrderStore();
 
   const { t } = useTranslation();
   const styles = useStyles();

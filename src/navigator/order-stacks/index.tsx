@@ -11,7 +11,7 @@ import OrderEdit from '@/screens/order-edit';
 export type StackParamList = {
   Orders: {};
   OrderDetail: { orderId: Order['id'] };
-  OrderEdit: { orderId: Order['id'] };
+  OrderEdit: { orderId: Order['id'] } | undefined;
   ProductStacks: PrdStackParamList;
 };
 

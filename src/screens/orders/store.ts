@@ -2,20 +2,17 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type {} from '@redux-devtools/extension'; // required for devtools typing
 import { service } from '@/services/axios';
-import { Order } from '@/models/Order';
+import { Order, OrderItem } from '@/models/Order';
 
 type OrderState = {
-  fetchOrders: () => void;
-  orders?: Order[];
+  activeItem?: OrderItem;
+  setActiveItem(item?: OrderItem): void;
 };
 
-export const useBearStore = create<OrderState>()(
+export const useOrderStore = create<OrderState>()(
   devtools(set => ({
-    fetchOrders: async () => {
-      const orders = await service
-        .get<Order[]>('/orders')
-        .then(res => res.data);
-      set({ orders });
+    setActiveItem(item) {
+      set({ activeItem: item });
     },
   })),
 );

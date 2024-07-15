@@ -57,8 +57,6 @@ const useStyles = makeStyles((theme, { row, ...props }: Props) => {
     }),
   );
 
-  console.log('bg', bg);
-
   const viewBgStyle = bg
     ? { backgroundColor: theme.colors[bg as keyof Colors] }
     : ({} as StyleSheet.NamedStyles<{}>);

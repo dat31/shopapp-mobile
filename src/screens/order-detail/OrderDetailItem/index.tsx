@@ -65,24 +65,26 @@ function OrderDetailItem({
         }}
         Component={TouchableHighlight}>
         <Avatar
+          title={`x${quantity}`}
           containerStyle={styles.prodIcon}
-          size={48}
-          icon={{ name: 'tag', type: 'ionic' }}
+          size={42}
         />
         <ListItem.Content>
           <ListItem.Title>{product.name}</ListItem.Title>
+          <ListItem.Subtitle>{note}</ListItem.Subtitle>
+        </ListItem.Content>
+        <View
+          style={{
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            gap: theme.spacing.sm,
+          }}>
+          <Text>{formatCurrency(product.price * quantity)}</Text>
           <QtyModifier
             qty={item.quantity}
             onDecrease={() => onDecreaseQty(item)}
             onIncrease={() => onIncreaseQty(item)}
           />
-          <ListItem.Subtitle>{note}</ListItem.Subtitle>
-        </ListItem.Content>
-        <View style={{ alignItems: 'flex-end', gap: theme.spacing.sm }}>
-          <Text>
-            {formatCurrency(product.price)} x {quantity}
-          </Text>
-          <Text>{formatCurrency(product.price * quantity)}</Text>
         </View>
       </ListItem>
     </ContextMenu>
@@ -92,7 +94,7 @@ function OrderDetailItem({
 const useStyles = makeStyles(theme => {
   return {
     prodIcon: {
-      backgroundColor: theme.colors.grey2,
+      backgroundColor: theme.colors.primary,
     },
     qtyModify: {
       flexDirection: 'row',

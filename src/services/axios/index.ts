@@ -13,6 +13,11 @@ service.interceptors.request.use(req => {
     req.headers.Authorization = `Bearer ${token}`;
   }
 
+  if (req.url?.includes('/products/upload')) {
+    console.log('upload');
+    req.headers['Content-Type'] = 'multipart/form-data';
+  }
+
   return req;
 });
 

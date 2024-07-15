@@ -1,4 +1,10 @@
-import { FullScreenLoading, IconButton, Img, View } from '@/components';
+import {
+  FullScreenLoading,
+  IconButton,
+  Img,
+  PickerSelect,
+  View,
+} from '@/components';
 import { Product } from '@/models/Product';
 import { StackParamList } from '@/navigator/product-stacks';
 import {
@@ -18,6 +24,9 @@ import { useState } from 'react';
 import ContextMenu, {
   ContextMenuOnPressNativeEvent,
 } from 'react-native-context-menu-view';
+import { Category } from '@/models/Category';
+import { useCategoriesQuery } from '@/query/queries/category';
+import { service } from '@/services/axios';
 
 type Props = {} & NativeStackScreenProps<StackParamList, 'ProductEdit'>;
 
@@ -27,6 +36,7 @@ export default function ProductEdit({ route, navigation }: Props) {
   const { mutate, isLoading: isLoadingUpdateProd } = useUpdateProdMutation();
   const { mutate: createProdMutate, isLoading: isLoadingCreateProd } =
     useCreateProdMutation();
+  const { data: categories = [] } = useCategoriesQuery();
   const {
     handleChange,
     handleBlur,
@@ -36,11 +46,11 @@ export default function ProductEdit({ route, navigation }: Props) {
     errors,
     touched,
     submitCount,
+    setFieldValue,
   } = useFormik<Product>({
     initialValues: {} as Product,
     validationSchema: yup.object().shape({
       name: yup.string().required(t('errors.required_error')),
-      description: yup.string().required(t('errors.required_error')),
       price: yup.string().required(t('errors.required_error')),
     }),
     onSubmit(values) {
@@ -83,6 +93,15 @@ export default function ProductEdit({ route, navigation }: Props) {
       if (!img) {
         return;
       }
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: img.uri,
+        name: img.fileName,
+        type: img.type,
+      });
+      service.post('/products/upload', formData);
+
       setUri(img.uri as string);
     });
   };
@@ -95,9 +114,9 @@ export default function ProductEdit({ route, navigation }: Props) {
     return <FullScreenLoading />;
   }
 
-  const { name, description, price } = values;
+  const { name, description, price, category } = values;
 
-  console.log(getFieldError('name'));
+  console.log('cat', category);
 
   return (
     <ScrollView>
@@ -139,6 +158,16 @@ export default function ProductEdit({ route, navigation }: Props) {
           keyboardType="decimal-pad"
           value={price?.toString()}
           errorMessage={getFieldError('price') as string}
+        />
+        <PickerSelect<Category>
+          label="Category"
+          getKey={item => item.id.toString()}
+          getLabel={item => item?.name}
+          options={categories}
+          value={category}
+          onChange={category => {
+            setFieldValue('category', category);
+          }}
         />
         <View ph-md>
           <Button
