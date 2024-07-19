@@ -1,10 +1,11 @@
 import { User } from '@/models/User';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { MMKV } from 'react-native-mmkv';
 
 export const mmkv = new MMKV();
 
 export default {
-  setUser(user: User) {
+  setUser(user: User | null) {
     return mmkv.set('user', JSON.stringify(user));
   },
   removeUser() {
@@ -23,7 +24,7 @@ export default {
   removeToken() {
     return mmkv.delete('token');
   },
-  setToken(token: string) {
+  setToken(token: FirebaseAuthTypes.IdTokenResult['token']) {
     return mmkv.set('token', token);
   },
 };

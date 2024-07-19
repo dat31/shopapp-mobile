@@ -2,7 +2,7 @@ buildscript {
     ext {
 
         buildToolsVersion = "34.0.0"
-        minSdkVersion = 21
+        minSdkVersion = 23
         compileSdkVersion = 34
         targetSdkVersion = 34
         ndkVersion = "25.1.8937393"
@@ -25,7 +25,7 @@ project.ext {
     versions: [
       // Overriding Build/Android SDK Versions
       android : [
-        minSdk    : 21, // 23+ if using auth module
+        minSdk    : 23, // 23+ if using auth module
         targetSdk : 33,
         compileSdk: 34,
       ],
@@ -33,7 +33,7 @@ project.ext {
       // Overriding Library SDK Versions
       firebase: [
         // Override Firebase SDK Version
-        bom           : "33.1.0"
+        bom           : "33.1.2"
       ],
     ],
   ])

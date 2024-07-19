@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNav from './auth-nav';
 import { NavigationContainer } from '@react-navigation/native';
-import { useUser } from '@/query/queries/auth';
 import UnAuthNav from './unauth-nav';
+import { useAuth } from '@/hooks';
 
 type StackParamList = {
   AuthNav: {};
@@ -12,7 +12,7 @@ type StackParamList = {
 const { Navigator, Screen } = createNativeStackNavigator<StackParamList>();
 
 function RootNav() {
-  const { data: user } = useUser();
+  const { user } = useAuth();
   return (
     <NavigationContainer>
       <Navigator

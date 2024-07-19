@@ -134,9 +134,10 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
-    
+    implementation("com.google.firebase:firebase-auth")
+
     debugImplementation('com.facebook.flipper:flipper:0.250.0') {
         exclude group:'com.facebook.fbjni'
     }

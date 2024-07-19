@@ -1,15 +1,9 @@
-export type User = {
-  id: number;
-  username: string;
-  name: string;
-  phone: string;
-  role: Role;
-};
+import { FirebaseAuthTypes } from '@react-native-firebase/auth/lib/index';
+
+export type User = FirebaseAuthTypes.User;
 
 export enum Role {
   MANAGER = 'MANAGER',
   WAITER = 'WAITER',
   CHEF = 'CHEF',
 }
-
-export type SignInRequest = Pick<User, 'username'> & { password: string };

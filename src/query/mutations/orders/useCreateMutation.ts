@@ -12,12 +12,12 @@ export default function useCreateMutation() {
       return service.post<Order>('/orders', order).then(({ data }) => data);
     },
     onSuccess(data) {
-      console.log('useCreateMutation', data);
-
       client.setQueryData(
         QUERY_KEY,
         produce<Order[]>(orders => {
-          orders.push(data);
+          orders.push({
+            ...data,
+          });
         }),
       );
     },
