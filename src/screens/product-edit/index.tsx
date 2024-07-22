@@ -93,15 +93,12 @@ export default function ProductEdit({ route, navigation }: Props) {
       if (!img) {
         return;
       }
-
-      const formData = new FormData();
-      formData.append('file', {
+      const upload = {
         uri: img.uri,
         name: img.fileName,
         type: img.type,
-      });
-      service.post('/products/upload', formData);
-
+      };
+      setFieldValue('imageUrl', upload);
       setUri(img.uri as string);
     });
   };

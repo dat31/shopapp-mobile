@@ -52,7 +52,6 @@ function ProductList({
             onIncrease={increaseQty}
             onDecrease={decreaseQty}
             qty={getQty?.(item)}
-            shouldDisplayQty={isOrder}
           />
         );
       }}

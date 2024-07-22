@@ -8,22 +8,15 @@ import { TouchableHighlight } from 'react-native';
 type Props = {
   item: Product;
   onPress: (prod: Product) => void;
-  shouldDisplayQty?: boolean;
   onDecrease?: (prod: Product) => void;
   onIncrease?: (prod: Product) => void;
   qty?: number;
 };
 
-function ProductItem({
-  item,
-  onPress,
-  shouldDisplayQty,
-  onDecrease,
-  onIncrease,
-  qty,
-}: Props) {
+function ProductItem({ item, onPress, onDecrease, onIncrease, qty }: Props) {
   const { name, price } = item;
   const styles = useStyles();
+  console.log(item);
   return (
     <ListItem.Swipeable
       Component={TouchableHighlight}
@@ -32,7 +25,7 @@ function ProductItem({
       }}>
       <Avatar
         source={{
-          uri: 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+          uri: item.imageUrl,
         }}
         containerStyle={styles.prodIcon}
         avatarStyle={{

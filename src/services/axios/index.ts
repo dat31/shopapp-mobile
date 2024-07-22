@@ -8,13 +8,11 @@ export const service = axios.create({
 
 service.interceptors.request.use(req => {
   const token = storage.getToken();
-
   if (token) {
     req.headers.Authorization = `Bearer ${token}`;
   }
 
-  if (req.url?.includes('/products/upload')) {
-    console.log('upload');
+  if (req.url?.includes('/products/upload/image') && req.method === 'post') {
     req.headers['Content-Type'] = 'multipart/form-data';
   }
 
