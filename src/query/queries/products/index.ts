@@ -6,11 +6,11 @@ import { UseQueryOptions, useQuery } from 'react-query';
 
 export const QUERY_KEY = 'products';
 
-export function useProductsQuery(options: UseQueryOptions<Category[]>) {
+export function useProductsQuery(options: UseQueryOptions<Product[]>) {
   return useQuery({
     queryKey: QUERY_KEY,
     queryFn: async () =>
-      service.get<Category[]>('products').then(({ data }) => data),
+      service.get<Product[]>('products').then(({ data }) => data),
     ...options,
   });
 }

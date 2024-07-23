@@ -2,13 +2,12 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type {} from '@redux-devtools/extension'; // required for devtools typing
 import { Product } from '@/models/Product';
-import { Category } from '@/models/Category';
 
 type State = {
-  filteredProducts: Category[];
-  products: Category[];
+  filteredProducts: Product[];
+  products: Product[];
   onFilter: (text: string) => void;
-  setProducts: (products: Category[]) => void;
+  setProducts: (products: Product[]) => void;
 };
 
 export const useProductStore = create<State>()(
@@ -23,14 +22,9 @@ export const useProductStore = create<State>()(
       const filterPrdFn = (p: Product) =>
         p.name.toLocaleLowerCase().includes(text);
       set({
-        filteredProducts: get()
-          .products.filter(p => p.products.some(filterPrdFn))
-          .map(cat => ({
-            ...cat,
-            products: cat.products.filter(p =>
-              p.name.toLocaleLowerCase().includes(text),
-            ),
-          })),
+        filteredProducts: get().products.filter(p =>
+          p.name.toLocaleLowerCase().includes(text),
+        ),
       });
     },
     setProducts(products) {

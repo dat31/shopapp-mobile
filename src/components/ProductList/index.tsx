@@ -3,13 +3,14 @@ import { SectionList, SectionListData, SectionListProps } from 'react-native';
 import ProductItem from './ProductItem';
 import { Category } from '@/models/Category';
 import { Product } from '@/models/Product';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isEqual } from 'lodash';
 
 type ItemCb = (prod: Product) => void;
 
 type Props = {
-  data: Category[];
+  data: Product[];
   onItemPress: ItemCb;
   increaseQty?: ItemCb;
   decreaseQty?: ItemCb;
@@ -28,6 +29,27 @@ function ProductList({
 }: Props) {
   const styles = useStyles();
   const { t } = useTranslation();
+
+  const groupedByCategory = useMemo(() => {
+    const categories = (data as Product[]).reduce<Category[]>(
+      (acc, product) => {
+        if (
+          acc.findIndex(category => isEqual(category, product.category)) !== -1
+        ) {
+          return acc;
+        }
+        return [...acc, product.category];
+      },
+      [],
+    );
+    return categories.map(category => ({
+      ...category,
+      data: (data as Product[]).filter(product =>
+        isEqual(product.category, category),
+      ),
+    }));
+  }, [data]);
+
   return (
     <SectionList<Product, Category>
       keyExtractor={item => item.id.toString()}
@@ -39,10 +61,7 @@ function ProductList({
         );
       }}
       sections={
-        data.map(({ products: data, ...cat }: Category) => ({
-          ...cat,
-          data,
-        })) as unknown as SectionListData<Product, Category>[]
+        groupedByCategory as unknown as SectionListData<Product, Category>[]
       }
       renderItem={({ item }) => {
         return (

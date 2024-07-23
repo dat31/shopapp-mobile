@@ -18,7 +18,7 @@ import {
   useTheme,
 } from '@rneui/themed';
 import formatCurrency from '@/utils/format-currency';
-import { FullScreenLoading, QtyModifier, View } from '@/components';
+import { FullScreenLoading, SquareImg, QtyModifier, View } from '@/components';
 import { useProductDetailQuery } from '@/query/queries/products';
 import Menu from './Menu';
 import {} from '@/query/mutations/products';
@@ -166,18 +166,17 @@ function ProductDetail(props: Props) {
     return null;
   }
 
+  const { imageUrl } = product;
+
   return (
     <KeyboardAvoidingView>
       <ScrollView>
         <Overlay isVisible={isLoadingDelete}>
           <ActivityIndicator size={'large'} color={theme.colors.primary} />
         </Overlay>
-
-        <Image
+        <SquareImg
           style={styles.img}
-          source={{
-            uri: 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-          }}
+          {...((imageUrl ? { source: { uri: imageUrl } } : {}) as any)}
         />
         <View p-xl white>
           <View space-between row mb-md>
@@ -188,9 +187,8 @@ function ProductDetail(props: Props) {
               {formatCurrency(price as number)}
             </Text>
           </View>
-          <Text style={styles.desc}>{description}</Text>
+          {description ? <Text style={styles.desc}>{description}</Text> : null}
         </View>
-
         {orderId ? (
           <>
             <View bg-white mt-lg ph-lg pv-xl mb-lg>
@@ -229,8 +227,6 @@ function ProductDetail(props: Props) {
 const useStyles = makeStyles(theme => {
   return {
     img: {
-      width: '100%',
-      height: 256,
       objectFit: 'cover',
     },
     desc: {

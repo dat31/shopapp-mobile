@@ -24,21 +24,8 @@ export default function useCreateProdMutation() {
       const { data: product } = await service.post('/products', body);
       return product;
     },
-    onSuccess(data) {
-      client.setQueryData(
-        QUERY_KEY,
-        produce<Category[]>(categories => {
-          if (!data.category) {
-            categories.find(cat => !cat.id)?.products.push(data);
-            return;
-          }
-          const category = categories.find(cat => cat.id === data.category.id);
-          if (!category) {
-            return;
-          }
-          category.products.push(data);
-        }),
-      );
+    onSuccess() {
+      client.invalidateQueries(QUERY_KEY);
     },
   });
 }

@@ -14,9 +14,8 @@ type Props = {
 };
 
 function ProductItem({ item, onPress, onDecrease, onIncrease, qty }: Props) {
-  const { name, price } = item;
+  const { name, price, imageUrl } = item;
   const styles = useStyles();
-  console.log(item);
   return (
     <ListItem.Swipeable
       Component={TouchableHighlight}
@@ -24,9 +23,7 @@ function ProductItem({ item, onPress, onDecrease, onIncrease, qty }: Props) {
         onPress(item);
       }}>
       <Avatar
-        source={{
-          uri: item.imageUrl,
-        }}
+        {...(imageUrl ? { source: { uri: imageUrl } } : {})}
         containerStyle={styles.prodIcon}
         avatarStyle={{
           objectFit: 'cover',
@@ -51,7 +48,7 @@ function ProductItem({ item, onPress, onDecrease, onIncrease, qty }: Props) {
 
 const useStyles = makeStyles(theme => ({
   prodIcon: {
-    backgroundColor: theme.colors.grey2,
+    backgroundColor: theme.colors.grey3,
   },
 }));
 

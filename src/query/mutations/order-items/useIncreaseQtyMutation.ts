@@ -13,8 +13,6 @@ export default function useIncreaseQtyMutation() {
     { odId: Order['id']; odItem: OrderItem }
   >({
     mutationFn({ odId, odItem }) {
-      console.log('mutate', { odId, odItem });
-
       const order = client.getQueryData<Order>([QUERY_KEY, odId]) as Order;
       const odItemIdx = order?.items.findIndex(
         item => item.product.id === odItem.product.id,
@@ -33,8 +31,6 @@ export default function useIncreaseQtyMutation() {
       });
     },
     onSuccess({ data, status }, { odId, odItem }) {
-      console.log('increase success', data);
-      console.log('oditem', odItem);
       if (status === HttpStatusCode.Created) {
         client.setQueryData(
           [QUERY_KEY, odId],

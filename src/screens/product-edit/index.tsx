@@ -1,7 +1,7 @@
 import {
   FullScreenLoading,
   IconButton,
-  Img,
+  SquareImg,
   PickerSelect,
   View,
 } from '@/components';
@@ -33,7 +33,8 @@ type Props = {} & NativeStackScreenProps<StackParamList, 'ProductEdit'>;
 export default function ProductEdit({ route, navigation }: Props) {
   const { productId } = route.params || {};
   const { t } = useTranslation();
-  const { mutate, isLoading: isLoadingUpdateProd } = useUpdateProdMutation();
+  const { mutate: updateProdMutate, isLoading: isLoadingUpdateProd } =
+    useUpdateProdMutation();
   const { mutate: createProdMutate, isLoading: isLoadingCreateProd } =
     useCreateProdMutation();
   const { data: categories = [] } = useCategoriesQuery();
@@ -55,7 +56,7 @@ export default function ProductEdit({ route, navigation }: Props) {
     }),
     onSubmit(values) {
       if (values.id) {
-        mutate(values, {
+        updateProdMutate(values, {
           onSuccess() {
             navigation.popToTop();
             Toast.show('Update success');
@@ -75,13 +76,14 @@ export default function ProductEdit({ route, navigation }: Props) {
   const { isLoading } = useProductDetailQuery(productId as number, {
     onSuccess(data) {
       setValues(data);
+      if (data.imageUrl) {
+        console.log('data.image', data.imageUrl);
+        setUri(data.imageUrl);
+      }
     },
     enabled: Boolean(productId),
   });
-  const [uri, setUri] = useState(
-    'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-  );
-
+  const [uri, setUri] = useState('');
   const styles = useStyles();
 
   const editImage = (
@@ -113,14 +115,12 @@ export default function ProductEdit({ route, navigation }: Props) {
 
   const { name, description, price, category } = values;
 
-  console.log('cat', category);
-
   return (
     <ScrollView>
-      <Img
+      <SquareImg
         containerStyle={styles.imgContainer}
         style={styles.img}
-        source={{ uri }}>
+        {...((uri ? { source: { uri } } : {}) as any)}>
         <ContextMenu
           onPress={editImage}
           dropdownMenuMode
@@ -132,7 +132,7 @@ export default function ProductEdit({ route, navigation }: Props) {
             containerStyle={styles.editImgBtn}
           />
         </ContextMenu>
-      </Img>
+      </SquareImg>
       <View bg-white ph-lg pv-xl style={styles.form}>
         <Input
           onBlur={handleBlur('name')}
@@ -194,7 +194,6 @@ const useStyles = makeStyles(theme => {
     img: {
       justifyContent: 'flex-end',
       alignItems: 'flex-end',
-      objectFit: 'scale-down',
     },
     imgContainer: {
       backgroundColor: theme.colors.grey2,

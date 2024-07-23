@@ -14,7 +14,6 @@ function OrderItem({ item, onPress }: Props) {
 
   return (
     <ListItem
-      bottomDivider
       Component={TouchableHighlight}
       onPress={() => {
         onPress(item);

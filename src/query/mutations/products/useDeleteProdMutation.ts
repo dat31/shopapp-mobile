@@ -13,22 +13,8 @@ export default function useDeleteProdMutation() {
       return service.delete(`/products/${id}`);
     },
     onSuccess(_, prodId) {
-      client.setQueryData<Category[]>(
-        QUERY_KEY,
-        produce(categories => {
-          if (!categories) {
-            return;
-          }
-          const idx = categories?.findIndex(cat =>
-            cat.products.some(prod => prod.id === prodId),
-          );
-          if (idx === -1) {
-            return;
-          }
-          categories[idx as number].products = categories[
-            idx as number
-          ].products.filter(p => p.id !== prodId);
-        }),
+      client.setQueryData<Product[]>(QUERY_KEY, (products = []) =>
+        products?.filter(product => product.id !== prodId),
       );
     },
   });
