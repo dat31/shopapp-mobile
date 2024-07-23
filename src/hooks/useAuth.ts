@@ -6,14 +6,13 @@ import { User } from '@/models/User';
 export default function useAuth() {
   const [user, setUser] = useState<User | null>();
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(auth => {
+    return auth().onAuthStateChanged(auth => {
       setUser(auth);
       storage.setUser(auth);
       auth?.getIdTokenResult().then(idtoken => {
-        storage.setToken(idtoken.token);
+        storage.setToken(idtoken);
       });
     });
-    return subscriber; // unsubscribe on unmount
   }, []);
 
   return { user };

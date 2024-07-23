@@ -11,20 +11,24 @@ export default {
   removeUser() {
     return mmkv.delete('user');
   },
-  getUser() {
+  getUser(): User | undefined {
     const user = mmkv.getString('user');
     if (!user) {
       return;
     }
     return JSON.parse(user);
   },
-  getToken() {
-    return mmkv.getString('token');
+  getToken(): FirebaseAuthTypes.IdTokenResult | undefined {
+    const idToken = mmkv.getString('token');
+    if (!idToken) {
+      return;
+    }
+    return JSON.parse(idToken);
   },
   removeToken() {
     return mmkv.delete('token');
   },
-  setToken(token: FirebaseAuthTypes.IdTokenResult['token']) {
-    return mmkv.set('token', token);
+  setToken(token: FirebaseAuthTypes.IdTokenResult) {
+    return mmkv.set('token', JSON.stringify(token));
   },
 };
