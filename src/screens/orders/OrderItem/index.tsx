@@ -2,26 +2,33 @@ import { Order, Status } from '@/models/Order';
 import formatCurrency from '@/utils/format-currency';
 import { Avatar, ListItem, Text, makeStyles } from '@rneui/themed';
 import { format } from 'date-fns';
-import { TouchableHighlight } from 'react-native';
+import { memo } from 'react';
+import { TouchableHighlight, View } from 'react-native';
 
 type Props = {
   item: Order;
   onPress: (item: Order) => void;
+  dateFormatPattern: string;
 };
 
-function OrderItem({ item, onPress }: Props) {
+function OrderItem({ item, onPress, dateFormatPattern }: Props) {
   const styles = useStyles(item.status);
-
   return (
     <ListItem
       Component={TouchableHighlight}
       onPress={() => {
         onPress(item);
       }}>
-      <Avatar title={item.table || '#'} size={40} containerStyle={styles.avt} />
+      <Avatar
+        Component={View}
+        ImageComponent={View}
+        title={item.table || '#'}
+        size={40}
+        containerStyle={styles.avt}
+      />
       <ListItem.Content>
         <ListItem.Title>
-          {format(new Date(item.orderDate), 'HH:mm')}
+          {format(new Date(item.orderDate), dateFormatPattern)}
         </ListItem.Title>
         <ListItem.Subtitle>
           {formatCurrency(
@@ -55,6 +62,7 @@ const useStyles = makeStyles((theme, status: Order['status']) => {
   return {
     avt: {
       backgroundColor: theme.colors.primary,
+      borderRadius: 4,
     },
     status: {
       backgroundColor: getBgColor(),
@@ -76,4 +84,4 @@ const useStyles = makeStyles((theme, status: Order['status']) => {
   };
 });
 
-export default OrderItem;
+export default memo(OrderItem);

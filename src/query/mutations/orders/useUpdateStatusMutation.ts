@@ -1,5 +1,5 @@
 import { Order, Status } from '@/models/Order';
-import { QUERY_KEY } from '@/query/queries/orders';
+import { QUERY_KEY, useSetOrdersQueryData } from '@/query/queries/orders';
 import { service } from '@/services/axios';
 import { AxiosError, AxiosResponse } from 'axios';
 import { produce } from 'immer';
@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from 'react-query';
 
 export default function useUpdateStatusMutation() {
   const client = useQueryClient();
+  const setQueryData = useSetOrdersQueryData();
   return useMutation<AxiosResponse<Order>, AxiosError, Partial<Order>>({
     mutationFn({ id, status }) {
       if (status === Status.CANCELED) {
@@ -15,8 +16,7 @@ export default function useUpdateStatusMutation() {
       return service.patch(`/orders/complete/${id}`);
     },
     onSuccess({ data }, { id }) {
-      client.setQueryData<Order[]>(
-        QUERY_KEY,
+      setQueryData(
         produce(orders => {
           if (!orders) {
             return;

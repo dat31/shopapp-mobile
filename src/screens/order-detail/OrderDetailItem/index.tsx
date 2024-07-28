@@ -30,7 +30,7 @@ function OrderDetailItem({
 }: Props) {
   const styles = useStyles();
   const { theme } = useTheme();
-  const { product, quantity, note } = item;
+  const { product, quantity, note, price } = item;
   const { t } = useTranslation();
 
   function handleCtxMenu(
@@ -56,7 +56,6 @@ function OrderDetailItem({
       dropdownMenuMode={false}
       actions={[{ title: t('common.delete') }, { title: t('common.detail') }]}>
       <ListItem
-        bottomDivider
         onPress={() => {
           onPress(item);
         }}
@@ -67,25 +66,15 @@ function OrderDetailItem({
         <Avatar
           title={`x${quantity}`}
           containerStyle={styles.prodIcon}
-          size={42}
+          size={40}
         />
         <ListItem.Content>
           <ListItem.Title>{product.name}</ListItem.Title>
           <ListItem.Subtitle>{note}</ListItem.Subtitle>
         </ListItem.Content>
-        <View
-          style={{
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            gap: theme.spacing.sm,
-          }}>
-          <Text>{formatCurrency(product.price * quantity)}</Text>
-          <QtyModifier
-            qty={item.quantity}
-            onDecrease={() => onDecreaseQty(item)}
-            onIncrease={() => onIncreaseQty(item)}
-          />
-        </View>
+        <Text bold style={{ alignSelf: 'flex-start' }}>
+          {formatCurrency(quantity * price)}
+        </Text>
       </ListItem>
     </ContextMenu>
   );
@@ -95,6 +84,7 @@ const useStyles = makeStyles(theme => {
   return {
     prodIcon: {
       backgroundColor: theme.colors.primary,
+      borderRadius: 4,
     },
     qtyModify: {
       flexDirection: 'row',

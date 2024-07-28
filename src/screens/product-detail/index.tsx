@@ -187,7 +187,9 @@ function ProductDetail(props: Props) {
               {formatCurrency(price as number)}
             </Text>
           </View>
-          {description ? <Text style={styles.desc}>{description}</Text> : null}
+          <Text style={styles.desc}>
+            {description || 'There is no description '}
+          </Text>
         </View>
         {orderId ? (
           <>

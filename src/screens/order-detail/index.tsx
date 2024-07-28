@@ -1,13 +1,8 @@
 import { StackParamList } from '@/navigator/order-stacks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  TouchableHighlight,
-} from 'react-native';
+import { Alert, FlatList, SectionList, TouchableOpacity } from 'react-native';
 import OrderDetailItem from './OrderDetailItem';
-import { Button, Icon, Text, makeStyles } from '@rneui/themed';
+import { Button, Chip, Text } from '@rneui/themed';
 import formatCurrency from '@/utils/format-currency';
 import { FullScreenLoading, ListEmptyComponent, View } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +19,7 @@ import {
 } from '@/query/mutations/order-items';
 import useStyles from './style';
 import Toast from 'react-native-root-toast';
-import { useOrderStore } from '../orders/store';
+import { isEmpty } from 'lodash';
 
 type Props = NativeStackScreenProps<StackParamList, 'OrderDetail'>;
 
@@ -34,11 +29,10 @@ function OrderDetail({ route, navigation }: Props) {
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
   const { mutate: updateStatusMutate } = useUpdateStatusMutation();
   const { mutate: deleteItemMutate } = useDeleteMutation();
-  const { setActiveItem } = useOrderStore();
 
   const { t } = useTranslation();
   const styles = useStyles();
-  const { data: order, isLoading } = useOrderDetailQuery(orderId);
+  const { data: order, isLoading, isFetching } = useOrderDetailQuery(orderId);
   const { items, id, status } = order || {};
   const { setOptions } = navigation;
 
@@ -51,7 +45,20 @@ function OrderDetail({ route, navigation }: Props) {
       {
         text: t('common.yes'),
         onPress() {
-          updateStatusMutate({ id, status: Status.CANCELED });
+          updateStatusMutate(
+            { id, status: Status.CANCELED },
+            {
+              onSuccess() {
+                Toast.show(
+                  t('common.action_object_result', {
+                    action: t('order.status.canceled'),
+                    object: t('order.label'),
+                    result: t('common.success'),
+                  }),
+                );
+              },
+            },
+          );
         },
       },
       { text: t('common.no') },
@@ -66,7 +73,15 @@ function OrderDetail({ route, navigation }: Props) {
           updateStatusMutate(
             { id, status: Status.COMPLETED },
             {
-              onSuccess() {},
+              onSuccess() {
+                Toast.show(
+                  t('common.action_object_result', {
+                    action: t('order.status.completed'),
+                    object: t('order.label'),
+                    result: t('common.success'),
+                  }),
+                );
+              },
             },
           );
         },
@@ -142,13 +157,13 @@ function OrderDetail({ route, navigation }: Props) {
     });
   }, [setOptions, cancel, complete, edit]);
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <FullScreenLoading />;
   }
 
   return (
     <View bg-white flex-1>
-      <FlatList
+      <SectionList<OrderItem>
         {...(order
           ? {
               ListHeaderComponent: <OrderInformation order={order} />,
@@ -158,8 +173,62 @@ function OrderDetail({ route, navigation }: Props) {
         ListEmptyComponent={
           <ListEmptyComponent icon="cube-outline" text="Order is empty" />
         }
+        ListFooterComponent={() => (
+          <View style={{ padding: 16 }}>
+            <Text h4 primary>
+              Price
+            </Text>
+            <View row space-between mb-md style={{ alignItems: 'flex-end' }}>
+              <Text>{t('common.discount')}</Text>
+              <Text h4>0</Text>
+            </View>
+            <View row space-between mb-md style={{ alignItems: 'flex-end' }}>
+              <Text>{t('common.total')}</Text>
+              <Text h4>{formatCurrency(total)}</Text>
+            </View>
+          </View>
+        )}
         style={{ flexGrow: 1 }}
-        data={items as any}
+        sections={[{ data: items as OrderItem[] }]}
+        renderSectionHeader={({ section }) => {
+          return (
+            <View style={{ gap: 32 }}>
+              <View
+                row
+                items-center
+                space-between
+                style={styles.prodSectionHeader}>
+                <Text h4 primary>
+                  {t('products.label')}
+                </Text>
+                {[Status.CREATED, Status.INPROGRESS].includes(
+                  status as Status,
+                ) ? (
+                  <TouchableOpacity
+                    disabled={isLoading}
+                    onPress={() => {
+                      navigation.navigate('ProductStacks', {
+                        screen: 'OrderProducts',
+                        params: { orderId: order?.id },
+                      } as any);
+                    }}>
+                    <Text bold primary>
+                      add product
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+              {isEmpty(section.data) ? (
+                <View>
+                  <ListEmptyComponent
+                    icon="cube-outline"
+                    text="Order is empty"
+                  />
+                </View>
+              ) : null}
+            </View>
+          );
+        }}
         renderItem={({ item }) => (
           <OrderDetailItem
             onPress={onItemPress}
@@ -170,31 +239,6 @@ function OrderDetail({ route, navigation }: Props) {
           />
         )}
       />
-
-      <View p-lg>
-        <View row space-between mb-md>
-          <Text h4>{t('common.discount')}</Text>
-          <Text h4>0</Text>
-        </View>
-        <View row space-between>
-          <Text h4>{t('common.total')}</Text>
-          <Text h4>{formatCurrency(total)}</Text>
-        </View>
-      </View>
-
-      {[Status.CREATED, Status.INPROGRESS].includes(order?.status as Status) ? (
-        <Button
-          disabled={isLoading}
-          containerStyle={styles.addButton}
-          onPress={() => {
-            navigation.navigate('ProductStacks', {
-              screen: 'OrderProducts',
-              params: { orderId: order?.id },
-            } as any);
-          }}>
-          {t('common.add')}
-        </Button>
-      ) : null}
     </View>
   );
 }

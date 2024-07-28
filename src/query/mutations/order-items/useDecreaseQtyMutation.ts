@@ -1,5 +1,5 @@
 import { Order, OrderItem } from '@/models/Order';
-import { QUERY_KEY } from '@/query/queries/orders';
+import { QUERY_KEY, useSetOrdersQueryData } from '@/query/queries/orders';
 import { service } from '@/services/axios';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { produce } from 'immer';
@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from 'react-query';
 
 export default function useDecreaseQtyMutation() {
   const client = useQueryClient();
+  const setQueryData = useSetOrdersQueryData();
   return useMutation<
     AxiosResponse<OrderItem>,
     AxiosError,
@@ -31,24 +32,23 @@ export default function useDecreaseQtyMutation() {
     },
     onSuccess(data, { odId, odItem }) {
       if (data.status === HttpStatusCode.NoContent) {
-        client.setQueryData(
-          QUERY_KEY,
-          produce<Order[]>(orders => {
-            const order = orders.find(od => od.id === odId);
-            if (!order) {
-              return;
-            }
-            const item = order.items.find(
-              i => i.product.id === odItem.product.id,
-            );
-            if (!item) {
-              return;
-            }
-            order.items = order.items.filter(
-              item => item.product.id === odItem.product.id,
-            );
-          }),
-        );
+        // setQueryData(
+        //   produce<Order[]>(orders => {
+        //     const order = orders.find(od => od.id === odId);
+        //     if (!order) {
+        //       return;
+        //     }
+        //     const item = order.items.find(
+        //       i => i.product.id === odItem.product.id,
+        //     );
+        //     if (!item) {
+        //       return;
+        //     }
+        //     order.items = order.items.filter(
+        //       item => item.product.id === odItem.product.id,
+        //     );
+        //   }),
+        // );
         client.setQueryData(
           [QUERY_KEY, odId],
           produce<Order>(order => {
@@ -73,22 +73,21 @@ export default function useDecreaseQtyMutation() {
         }),
       );
 
-      client.setQueryData(
-        QUERY_KEY,
-        produce<Order[]>(orders => {
-          const order = orders.find(od => od.id === odId);
-          if (!order) {
-            return;
-          }
-          const item = order.items.find(
-            i => i.product.id === odItem.product.id,
-          );
-          if (!item) {
-            return;
-          }
-          item.quantity = item.quantity - 1;
-        }),
-      );
+      // setQueryData(
+      //   produce<Order[]>(orders => {
+      //     const order = orders.find(od => od.id === odId);
+      //     if (!order) {
+      //       return;
+      //     }
+      //     const item = order.items.find(
+      //       i => i.product.id === odItem.product.id,
+      //     );
+      //     if (!item) {
+      //       return;
+      //     }
+      //     item.quantity = item.quantity - 1;
+      //   }),
+      // );
     },
   });
 }

@@ -1,3 +1,4 @@
+import { PaginatedRequest, SortDirection } from './common';
 import { Product } from './Product';
 import { User } from './User';
 
@@ -25,3 +26,13 @@ export type OrderItem = {
   order: Pick<Order, 'id'>;
   note: string;
 };
+
+export type OrderFilter = PaginatedRequest<
+  Partial<
+    Order & {
+      from: Date;
+      to: Date;
+      order: Partial<{ [k in keyof Order]: SortDirection }>;
+    }
+  >
+>;

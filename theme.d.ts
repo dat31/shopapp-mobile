@@ -4,5 +4,6 @@ import '@rneui/themed';
 declare module '@rneui/themed' {
   export interface TextProps {
     bold?: boolean;
+    primary?: boolean;
   }
 }

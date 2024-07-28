@@ -11,6 +11,10 @@ const useStyles = makeStyles(({ spacing, colors }) => ({
   completeBtn: {
     backgroundColor: colors.success,
   },
+  prodSectionHeader: {
+    paddingHorizontal: 16,
+    color: colors.primary,
+  },
 }));
 
 export default useStyles;

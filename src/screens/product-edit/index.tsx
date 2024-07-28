@@ -1,10 +1,4 @@
-import {
-  FullScreenLoading,
-  IconButton,
-  SquareImg,
-  PickerSelect,
-  View,
-} from '@/components';
+import { FullScreenLoading, IconButton, SquareImg, View } from '@/components';
 import { Product } from '@/models/Product';
 import { StackParamList } from '@/navigator/product-stacks';
 import {
@@ -13,7 +7,7 @@ import {
 } from '@/query/mutations/products';
 import { useProductDetailQuery } from '@/query/queries/products';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Button, Input, makeStyles } from '@rneui/themed';
+import { Button, Input, makeStyles, useTheme } from '@rneui/themed';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { NativeSyntheticEvent, ScrollView } from 'react-native';
@@ -26,7 +20,7 @@ import ContextMenu, {
 } from 'react-native-context-menu-view';
 import { Category } from '@/models/Category';
 import { useCategoriesQuery } from '@/query/queries/category';
-import { service } from '@/services/axios';
+import { Picker } from '@/components';
 
 type Props = {} & NativeStackScreenProps<StackParamList, 'ProductEdit'>;
 
@@ -85,6 +79,7 @@ export default function ProductEdit({ route, navigation }: Props) {
   });
   const [uri, setUri] = useState('');
   const styles = useStyles();
+  const { theme } = useTheme();
 
   const editImage = (
     e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
@@ -156,28 +151,27 @@ export default function ProductEdit({ route, navigation }: Props) {
           value={price?.toString()}
           errorMessage={getFieldError('price') as string}
         />
-        <PickerSelect<Category>
-          label="Category"
-          getKey={item => item.id.toString()}
-          getLabel={item => item?.name}
-          options={categories}
+        <Picker<Category>
           value={category}
-          onChange={category => {
-            setFieldValue('category', category);
-          }}
+          label={t('category.label')}
+          data={categories}
+          getValue={item => item}
+          getLabel={item => item.name}
+          onChange={value => setFieldValue('category', value)}
         />
-        <View ph-md>
+        <View ph-md pv-md pb-sm>
           <Button
-            disabled={isLoadingUpdateProd || isLoadingCreateProd}
-            color={'error'}
-            containerStyle={styles.discardBtn}>
-            Discard
-          </Button>
-          <Button
+            containerStyle={styles.submitBtn}
             loading={isLoadingUpdateProd || isLoadingCreateProd}
             disabled={isLoadingUpdateProd}
             onPress={handleSubmit as any}>
             Submit
+          </Button>
+          <Button
+            disabled={isLoadingUpdateProd || isLoadingCreateProd}
+            titleStyle={{ color: styles.discardBtn.color }}
+            type="clear">
+            Cancel
           </Button>
         </View>
       </View>
@@ -198,8 +192,11 @@ const useStyles = makeStyles(theme => {
     imgContainer: {
       backgroundColor: theme.colors.grey2,
     },
+    submitBtn: {
+      marginBottom: theme.spacing.lg,
+    },
     discardBtn: {
-      marginBottom: theme.spacing.xl,
+      color: theme.colors.error,
     },
     form: {
       gap: theme.spacing.lg,

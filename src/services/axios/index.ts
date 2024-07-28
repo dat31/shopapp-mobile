@@ -3,7 +3,7 @@ import storage from '../storage';
 import auth from '@react-native-firebase/auth';
 
 export const service = axios.create({
-  baseURL: 'http://10.0.2.2:3000',
+  baseURL: 'http://192.168.112.14:3000',
 });
 
 service.interceptors.request.use(async req => {

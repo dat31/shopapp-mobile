@@ -50,9 +50,6 @@ const useStyles = makeStyles((theme, { row, ...props }: Props) => {
 
   const bg = Object.keys(theme.colors).find(c =>
     Object.keys(props).some(prop => {
-      if (prop === 'bg-white') {
-        console.log('ok', prop.includes(c));
-      }
       return prop.includes(c);
     }),
   );

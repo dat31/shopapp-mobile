@@ -1,5 +1,6 @@
 import { Order, OrderItem } from '@/models/Order';
-import { QUERY_KEY } from '@/query/queries/orders';
+import { QUERY_KEY, useSetOrdersQueryData } from '@/query/queries/orders';
+import { useOrderStore } from '@/screens/orders/store';
 import { service } from '@/services/axios';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { produce } from 'immer';
@@ -7,6 +8,8 @@ import { useMutation, useQueryClient } from 'react-query';
 
 export default function useIncreaseQtyMutation() {
   const client = useQueryClient();
+  const { filter } = useOrderStore();
+  const setQueryData = useSetOrdersQueryData();
   return useMutation<
     AxiosResponse<OrderItem>,
     AxiosError,
@@ -38,16 +41,16 @@ export default function useIncreaseQtyMutation() {
             order.items.push(data);
           }),
         );
-        client.setQueryData(
-          QUERY_KEY,
-          produce<Order[]>(orders => {
-            const order = orders.find(item => item.id === data.order.id);
-            if (!order) {
-              return;
-            }
-            order.items.push(data);
-          }),
-        );
+
+        // setQueryData(
+        //   produce<Order[]>(orders => {
+        //     const order = orders.find(item => item.id === data.order.id);
+        //     if (!order) {
+        //       return;
+        //     }
+        //     order.items.push(data);
+        //   }),
+        // );
         return;
       }
 
@@ -59,24 +62,24 @@ export default function useIncreaseQtyMutation() {
         }),
       );
 
-      client.setQueryData(
-        QUERY_KEY,
-        produce<Order[]>(orders => {
-          const orderIndex = orders.findIndex(item => item.id === odId);
-          if (orderIndex === -1) {
-            return;
-          }
-          const orderItemIndex = orders[orderIndex].items.findIndex(
-            item => item.id === data.id,
-          );
-          if (orderItemIndex === -1) {
-            return;
-          }
+      // setQueryData(
+      //   produce<Order[]>(orders => {
 
-          orders[orderIndex].items[orderItemIndex].quantity =
-            orders[orderIndex].items[orderItemIndex].quantity + 1;
-        }),
-      );
+      //     const orderIndex = orders.findIndex(item => item.id === odId);
+      //     if (orderIndex === -1) {
+      //       return;
+      //     }
+      //     const orderItemIndex = orders[orderIndex].items.findIndex(
+      //       item => item.id === data.id,
+      //     );
+      //     if (orderItemIndex === -1) {
+      //       return;
+      //     }
+
+      //     orders[orderIndex].items[orderItemIndex].quantity =
+      //       orders[orderIndex].items[orderItemIndex].quantity + 1;
+      //   }),
+      // );
     },
   });
 }

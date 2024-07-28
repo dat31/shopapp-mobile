@@ -22,6 +22,7 @@ function App() {
       auth?.getIdTokenResult().then(idtoken => {
         console.log('idtoken', idtoken);
       });
+      setInitializing(false);
     });
     return subscriber; // unsubscribe on unmount
   }, []);

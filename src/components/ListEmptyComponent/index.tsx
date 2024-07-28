@@ -10,8 +10,8 @@ function ListEmptyComponent({ icon, text }: Props) {
   const { theme } = useTheme();
   return (
     <View justify-center items-center flexGrow-1>
-      <Icon name={icon} type="ionicon" size={48} color={theme.colors.grey3} />
-      <Text h4 style={{ color: theme.colors.grey3 }}>
+      <Icon name={icon} type="ionicon" size={40} color={theme.colors.grey3} />
+      <Text style={{ color: theme.colors.grey3, marginTop: theme.spacing.md }}>
         {text}
       </Text>
     </View>

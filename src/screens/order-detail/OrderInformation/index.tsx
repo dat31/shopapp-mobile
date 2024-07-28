@@ -14,7 +14,7 @@ function OrderInformation({ order }: Props) {
   const { t } = useTranslation();
   return (
     <>
-      <View p-lg style={styles.root}>
+      <View style={styles.root}>
         <Text h4 style={styles.orderInfo}>
           {t('common.information')}
         </Text>
@@ -30,7 +30,7 @@ function OrderInformation({ order }: Props) {
 
         <View row space-between>
           <Text>{t('order.creator')} </Text>
-          <Text>{creator.name}</Text>
+          <Text>{creator.displayName}</Text>
         </View>
 
         <View row space-between>
@@ -38,9 +38,6 @@ function OrderInformation({ order }: Props) {
           <Text>{t(`order.status.${status.toLocaleLowerCase()}`)}</Text>
         </View>
       </View>
-      <Text h4 style={[styles.orderInfo, styles.orderProds]}>
-        {t('products.label')}
-      </Text>
     </>
   );
 }
@@ -54,6 +51,7 @@ const useStyles = makeStyles(({ colors, spacing }) => ({
   },
   root: {
     gap: spacing.md,
+    padding: 16,
   },
   orderInfo: {
     color: colors.primary,

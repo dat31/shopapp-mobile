@@ -1,6 +1,7 @@
 {
   "common": {
     "add": "Add",
+    "create": "Create",
     "edit": "Edit",
     "delete": "Delete",
     "complete": "Complete",
@@ -11,18 +12,28 @@
     "fail": "Fail",
     "confirmation": "Confirmation",
     "action_confirm": "Are you sure to {{action}}{{item}}?",
+    "action_object_result": "{{object}} has been {{action}} {{result}}!",
     "yes": "Yes",
     "no": "No",
     "call": "Call",
     "detail": "Detail",
     "ok": "Ok",
     "discard": "Discard",
-    "information": "Information"
+    "information": "Information",
+    "sort": "Sort",
+    "filter": "Filter",
+    "search": "Search",
+    "clear_search": "Clear"
+  },
+  "times": {
+    "today": "Today",
+    "this_week": "This week"
   },
   "errors": {
     "required_error": "This field is required!"
   },
   "order": {
+    "label": "Order",
     "table": "Table",
     "time": "Time",
     "update-status-placeholder": "Choose status",

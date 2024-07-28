@@ -1,4 +1,4 @@
-import { PickerSelect } from '@/components';
+import { FullScreenLoading, Picker, PickerSelect, View } from '@/components';
 import { Order, Status } from '@/models/Order';
 import { User } from '@/models/User';
 import { StackParamList } from '@/navigator/order-stacks';
@@ -13,6 +13,9 @@ import { useCreateMutation, useUpdateMutation } from '@/query/mutations/orders';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import storage from '@/services/storage';
 import { StackActions } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import { statusOptions } from '@/constants/order';
+import { isEqual, pick } from 'lodash';
 
 type Props = NativeStackScreenProps<StackParamList, 'OrderEdit'>;
 
@@ -28,7 +31,7 @@ export default function OrderEdit({ route, navigation }: Props) {
       initialValues: {
         status: Status.CREATED,
         orderDate: new Date().toISOString(),
-        creator: storage.getUser(),
+        creator: mapUserToSelectOption(auth().currentUser as User) as User,
       } as unknown as Order,
       onSubmit(values) {
         if (values.id) {
@@ -49,63 +52,74 @@ export default function OrderEdit({ route, navigation }: Props) {
         });
       },
     });
-  useOrderDetailQuery(route.params?.orderId as number, {
-    onSuccess: setValues,
+  const { isFetching } = useOrderDetailQuery(route.params?.orderId as number, {
+    onSuccess({ creator, ...data }) {
+      setValues({ creator: mapUserToSelectOption(creator), ...data });
+    },
   });
   const { data: employees = [] } = useEmployeesQuery();
-  const { t: tStatus } = useTranslation(undefined, {
-    keyPrefix: 'order.status',
-  });
   const { t } = useTranslation();
   const { status, orderDate, creator, table } = values;
 
+  if (isFetching) {
+    return <FullScreenLoading />;
+  }
+
   return (
     <ScrollView>
-      <KeyboardAvoidingView style={styles.form}>
-        <DateTimePicker
-          value={orderDate}
-          onChange={date => setFieldValue('orderDate', date)}
-        />
-        <PickerSelect<Status>
-          label={t('order.status.label')}
-          value={status}
-          onChange={handleChange('status')}
-          getLabel={item => tStatus(item?.toLocaleLowerCase())}
-          getKey={item => item}
-          options={[
-            Status.CANCELED,
-            Status.COMPLETED,
-            Status.INPROGRESS,
-            Status.CREATED,
-          ]}
-        />
-        <Input
-          label="Table"
-          value={table}
-          onChangeText={handleChange('table')}
-        />
-        <PickerSelect<User>
-          label={t('order.creator')}
-          getKey={item => item.id.toString()}
-          value={creator}
-          onChange={value => setFieldValue('creator', value)}
-          getLabel={item => item?.name}
-          options={employees}
-        />
-        <Button
-          loading={isLoadingUpdate || isLoadingCreate}
-          onPress={handleSubmit as any}>
-          {t('common.ok')}
-        </Button>
+      <KeyboardAvoidingView>
+        <View style={styles.form}>
+          <DateTimePicker
+            label={t('order.time')}
+            value={new Date(orderDate)}
+            onChange={date => setFieldValue('orderDate', date)}
+          />
+          <Picker
+            getValue={v => v.value}
+            data={statusOptions}
+            getLabel={item => item.label}
+            onChange={v => setFieldValue('status', v)}
+            label={t('order.status.label')}
+            value={status}
+          />
+          <Input
+            inputStyle={{ backgroundColor: 'white' }}
+            label="Table"
+            value={table}
+            onChangeText={handleChange('table')}
+          />
+          <Picker<User>
+            getValue={v => mapUserToSelectOption(v)}
+            data={employees.concat([
+              mapUserToSelectOption(auth().currentUser as User),
+            ])}
+            getLabel={item => item.displayName as string}
+            onChange={v => {
+              setFieldValue('creator', v);
+            }}
+            label={t('order.creator')}
+            value={creator}
+          />
+          <Button
+            loading={isLoadingUpdate || isLoadingCreate}
+            onPress={handleSubmit as any}>
+            {t('common.ok')}
+          </Button>
+        </View>
       </KeyboardAvoidingView>
     </ScrollView>
   );
 }
 
-const useStyles = makeStyles(({ spacing }) => ({
+function mapUserToSelectOption(user: User) {
+  return pick(user, 'uid', 'displayName') as User;
+}
+
+const useStyles = makeStyles(({ spacing, colors }) => ({
   form: {
     gap: spacing.lg,
-    paddingHorizontal: spacing.lg,
+    padding: spacing.lg,
     paddingVertical: spacing.xl,
+    backgroundColor: colors.white,
   },
 }));

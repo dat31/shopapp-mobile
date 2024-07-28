@@ -1,16 +1,28 @@
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { Input } from '@rneui/themed';
+import RNDateTimePicker, {
+  AndroidNativeProps,
+  IOSNativeProps,
+} from '@react-native-community/datetimepicker';
+import { Input, InputProps } from '@rneui/themed';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableHighlight, TouchableOpacity } from 'react-native';
 
 type Props = {
-  value: string;
+  value: Date;
+  label: string;
   onChange: (value: Date | undefined) => void;
+  inputProps?: InputProps;
+  pickerProps?: Partial<AndroidNativeProps> | Partial<IOSNativeProps>;
 };
 
-export default function DateTimePicker({ value, onChange }: Props) {
+export default function DateTimePicker({
+  value,
+  onChange,
+  inputProps,
+  pickerProps,
+  label,
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -18,24 +30,24 @@ export default function DateTimePicker({ value, onChange }: Props) {
     <>
       <TouchableOpacity
         onPress={() => {
-          console.log('press');
           setIsOpen(true);
         }}>
         <Input
-          label={t('order.time')}
+          label={label}
           readOnly
           value={value ? format(value, 'HH:mm') : ''}
+          {...inputProps}
         />
       </TouchableOpacity>
       {isOpen && (
         <RNDateTimePicker
+          value={value}
           onChange={(_, date) => {
             setIsOpen(false);
-
             onChange(date);
           }}
-          value={new Date(value)}
           mode="time"
+          {...(pickerProps as any)}
         />
       )}
     </>

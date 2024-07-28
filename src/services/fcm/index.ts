@@ -24,6 +24,8 @@ export async function requestUserPermission() {
 }
 
 export async function init() {
+  console.log('is registered', messaging().isDeviceRegisteredForRemoteMessages);
+
   await messaging().registerDeviceForRemoteMessages();
   const token = await messaging().getToken();
   messaging().onMessage(async remoteMessage => {
