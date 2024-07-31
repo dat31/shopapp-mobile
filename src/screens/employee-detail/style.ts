@@ -3,17 +3,15 @@ import { makeStyles } from '@rneui/themed';
 const useStyles = makeStyles(theme => {
   return {
     img: {
-      width: '100%',
-      height: 256,
-      objectFit: 'cover',
       justifyContent: 'flex-start',
       alignItems: 'flex-end',
+      padding: theme.spacing.lg,
     },
     desc: {
       color: theme.colors.grey2,
     },
     sectionTitle: {
-      marginBottom: theme.spacing.md,
+      marginBottom: theme.spacing.sm,
     },
   };
 });

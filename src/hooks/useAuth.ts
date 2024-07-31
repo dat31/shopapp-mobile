@@ -8,6 +8,7 @@ export default function useAuth() {
   useEffect(() => {
     return auth().onAuthStateChanged(auth => {
       setUser(auth);
+      console.log('auth', auth);
       storage.setUser(auth);
       auth?.getIdTokenResult().then(idtoken => {
         storage.setToken(idtoken);

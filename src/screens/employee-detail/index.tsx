@@ -1,21 +1,22 @@
-import { FullScreenLoading, View } from '@/components';
+import { FullScreenLoading, SquareImg, View } from '@/components';
 import { StackParamList } from '@/navigator/employee-stacks';
 import { useEmployeeDetailQuery } from '@/query/queries/employees';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import useStyles from './style';
-import { Image, Text } from '@rneui/themed';
+import { Chip, Text } from '@rneui/themed';
 import { useEffect } from 'react';
 import Menu from './Menu';
 import confirmDelete from '@/utils/confirm-delete';
+import { ScrollView, TouchableOpacity } from 'react-native';
 
 type Props = {} & NativeStackScreenProps<StackParamList, 'EmployeeDetail'>;
 
 function EmployeeDetail({ route, navigation }: Props) {
-  const { id } = route.params;
-  const { setOptions } = navigation;
-  const { data, isLoading } = useEmployeeDetailQuery(id);
+  const { uid } = route.params;
+  const { setOptions, navigate } = navigation;
+  const { data, isLoading } = useEmployeeDetailQuery(uid);
   const styles = useStyles();
-  const { name, phone, role } = data || {};
+  const { displayName, phoneNumber, photoURL } = data || {};
 
   useEffect(() => {
     if (isLoading) {
@@ -25,53 +26,53 @@ function EmployeeDetail({ route, navigation }: Props) {
       headerRight: ({ tintColor }) => {
         return (
           <Menu
-            phoneNum={phone as string}
+            phoneNum={phoneNumber as string}
             tintColor={tintColor}
             onDelete={() => {
-              confirmDelete(() => {}, name as string);
+              confirmDelete(() => {}, displayName as string);
             }}
             onEdit={() => {
-              navigation.navigate('EmployeeEdit', { id });
+              navigation.navigate('EmployeeEdit', { uid });
             }}
           />
         );
       },
     });
-  }, [isLoading, setOptions, name]);
+  }, [isLoading, setOptions, displayName]);
+
+  function onSchedulesPress() {
+    navigate('EmployeeSchedules', {});
+  }
 
   if (isLoading) {
     return <FullScreenLoading />;
   }
 
   return (
-    <View>
-      <Image
-        style={styles.img}
-        source={{
-          uri: 'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-        }}>
-        <View ph-lg pv-sm success style={{ borderRadius: 16, margin: 8 }}>
-          <Text style={{ color: 'white', fontSize: 14 }}>Available</Text>
-        </View>
-      </Image>
-      <View p-xl white mb-md>
+    <ScrollView style={{ flex: 1 }}>
+      <SquareImg style={styles.img} source={{ uri: photoURL as string }} />
+      <View p-xl white>
         <Text h4 bold style={styles.sectionTitle}>
           Information
         </Text>
-        <Text>{name}</Text>
-        <Text>{phone}</Text>
-        <Text>{role}</Text>
+        <Text>{displayName}</Text>
+        <Text>{phoneNumber}</Text>
       </View>
-      <View p-xl white>
-        <Text h4 bold style={styles.sectionTitle}>
-          Schedule
-        </Text>
+      <View ph-xl pb-xl white>
+        <View space-between row>
+          <Text h4 bold style={styles.sectionTitle}>
+            Schedule
+          </Text>
+          <TouchableOpacity onPress={onSchedulesPress}>
+            <Text style={{}}>Details</Text>
+          </TouchableOpacity>
+        </View>
         <View>
           <Text>Start time: 8h</Text>
           <Text>End time: </Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

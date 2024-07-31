@@ -16,7 +16,7 @@ export default function useCreateProdMutation() {
         const formData = new FormData();
         formData.append('image', form.imageUrl);
         const { data: imageUrl } = await service.post(
-          '/products/upload/image',
+          '/upload/image',
           formData,
         );
         body.imageUrl = imageUrl;

@@ -25,10 +25,7 @@ export default function useUpdateProdMutation(
         //case2: upload image
         const formData = new FormData();
         formData.append('image', imageUrl);
-        const { data: url } = await service.post(
-          '/products/upload/image',
-          formData,
-        );
+        const { data: url } = await service.post('/upload/image', formData);
         return service.patch(`/products/${id}`, { ...prod, imageUrl: url });
       }
 

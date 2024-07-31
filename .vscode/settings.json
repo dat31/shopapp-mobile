@@ -4,5 +4,6 @@
     "editor.formatOnSave": true
   },
   "i18n-ally.localesPaths": ["D:/hello/shopapp/MobileApp2/src/i18/resources"],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "cSpell.words": ["Formik"]
 }

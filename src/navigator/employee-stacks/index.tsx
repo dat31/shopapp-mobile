@@ -1,24 +1,26 @@
 import { User } from '@/models/User';
 import EmployeeDetail from '@/screens/employee-detail';
 import EmployeeEdit from '@/screens/employee-edit';
+import EmployeeSchedules from '@/screens/employee-schedules';
 import Employees from '@/screens/employees';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '@rneui/themed';
 
 export type StackParamList = {
   Employees: {};
-  EmployeeDetail: { id: User['id']; name: User['name'] };
-  EmployeeEdit: { id: User['id'] };
+  EmployeeDetail: { uid: User['uid']; displayName: User['displayName'] };
+  EmployeeEdit: { uid: User['uid'] };
+  EmployeeSchedules: {};
 };
 
-const Stack = createNativeStackNavigator<StackParamList>();
+const { Navigator, Screen } = createNativeStackNavigator<StackParamList>();
 
 function EmployeeStacks() {
   const {
     theme: { colors },
   } = useTheme();
   return (
-    <Stack.Navigator
+    <Navigator
       initialRouteName="Employees"
       screenOptions={{
         headerStyle: {
@@ -28,14 +30,15 @@ function EmployeeStacks() {
         statusBarColor: colors.primary,
         headerShadowVisible: false,
       }}>
-      <Stack.Screen name="Employees" component={Employees} />
-      <Stack.Screen
+      <Screen name="Employees" component={Employees} />
+      <Screen
         name="EmployeeDetail"
         component={EmployeeDetail}
-        options={({ route }) => ({ title: route.params.name })}
+        options={({ route }) => ({ title: route.params.displayName as string })}
       />
-      <Stack.Screen name="EmployeeEdit" component={EmployeeEdit} />
-    </Stack.Navigator>
+      <Screen name="EmployeeEdit" component={EmployeeEdit} />
+      <Screen name="EmployeeSchedules" component={EmployeeSchedules} />
+    </Navigator>
   );
 }
 

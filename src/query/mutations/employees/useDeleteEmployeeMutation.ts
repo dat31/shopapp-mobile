@@ -7,11 +7,11 @@ export default function useDeleteEmployeeMutation() {
   const client = useQueryClient();
   return useMutation(
     QUERY_KEY,
-    (id: User['id']) => service.delete(`/users/employees/${id}`),
+    (id: User['uid']) => service.delete(`/users/employees/${id}`),
     {
       onSuccess(_, empId) {
         client.setQueryData<User[]>(QUERY_KEY, employees =>
-          employees ? employees.filter(e => e.id !== empId) : [],
+          employees ? employees.filter(e => e.uid !== empId) : [],
         );
       },
     },

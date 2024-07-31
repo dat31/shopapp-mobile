@@ -28,7 +28,7 @@ service.interceptors.request.use(async req => {
     req.headers.Authorization = `Bearer ${token.token}`;
   }
 
-  if (req.url?.includes('/products/upload/image') && req.method === 'post') {
+  if (req.url?.includes('/upload/image') && req.method === 'post') {
     req.headers['Content-Type'] = 'multipart/form-data';
   }
   return req;

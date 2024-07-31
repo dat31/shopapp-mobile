@@ -30,6 +30,7 @@ function Picker<T>({
           color: theme.colors.grey1,
           marginLeft: theme.spacing.lg,
           marginBottom: theme.spacing.sm,
+          fontSize: 16,
         }}
         bold>
         {label}
@@ -46,7 +47,7 @@ function Picker<T>({
             marginHorizontal: 8,
             backgroundColor: theme.colors.white,
             color: theme.colors.grey0,
-            fontSize: 16,
+            fontSize: 18,
           },
           chevron: { backgroundColor: theme.colors.grey0 },
         }}

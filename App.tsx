@@ -35,7 +35,6 @@ const theme = createTheme({
       },
       style: {
         color: theme.colors.grey0,
-        fontSize: 16,
         ...(props.bold ? { fontWeight: 'bold' } : {}),
         ...(props.primary ? { color: theme.colors.primary } : {}),
       },
@@ -53,6 +52,7 @@ const theme = createTheme({
         inputContainerStyle: {
           borderBottomWidth: 0,
         },
+        placeholderTextColor: theme.colors.grey5,
       };
     },
   },

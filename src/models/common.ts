@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 export type SortDirection =
   | 1
   | -1
@@ -14,4 +16,7 @@ export type PaginatedResponse<T> = {
   next?: number;
   previous?: number;
 };
+
 export type PaginatedRequest<T> = { take?: number; skip?: number } & T;
+
+export type ErrorResponse = AxiosError;

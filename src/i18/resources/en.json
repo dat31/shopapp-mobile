@@ -23,7 +23,9 @@
     "sort": "Sort",
     "filter": "Filter",
     "search": "Search",
-    "clear_search": "Clear"
+    "clear_search": "Clear",
+    "choose_from_library": "Choose from library",
+    "take_picture": "Take picture"
   },
   "times": {
     "today": "Today",

@@ -4,12 +4,12 @@ import { QUERY_KEY } from './useEmployeesQuery';
 import { service } from '@/services/axios';
 
 export default function useEmployeeDetailQuery(
-  id: User['id'],
+  uid: User['uid'],
   options?: Omit<UseQueryOptions<User>, 'queryKey' | 'queryFn'>,
 ) {
   return useQuery<User>(
-    [QUERY_KEY, id],
-    () => service.get(`/users/employees/${id}`).then(({ data }) => data),
+    [QUERY_KEY, uid],
+    () => service.get(`/users/employees/${uid}`).then(({ data }) => data),
     options,
   );
 }
