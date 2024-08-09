@@ -1,4 +1,4 @@
-import { FullScreenLoading, Picker, PickerSelect, View } from '@/components';
+import { FullScreenLoading, Picker, DateTimePicker, View } from '@/components';
 import { Order, Status } from '@/models/Order';
 import { User } from '@/models/User';
 import { StackParamList } from '@/navigator/order-stacks';
@@ -8,14 +8,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Input, makeStyles } from '@rneui/themed';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import DateTimePicker from './DateTimePicker';
 import { useCreateMutation, useUpdateMutation } from '@/query/mutations/orders';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
-import storage from '@/services/storage';
 import { StackActions } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import { statusOptions } from '@/constants/order';
-import { isEqual, pick } from 'lodash';
+import { pick } from 'lodash';
+import { useCallback } from 'react';
 
 type Props = NativeStackScreenProps<StackParamList, 'OrderEdit'>;
 
@@ -61,6 +60,13 @@ export default function OrderEdit({ route, navigation }: Props) {
   const { t } = useTranslation();
   const { status, orderDate, creator, table } = values;
 
+  const getCreatorSelectionLabel = useCallback((user: User) => {
+    if (user.uid === auth().currentUser?.uid) {
+      return user.displayName?.concat(` (You)`) as string;
+    }
+    return user.displayName as string;
+  }, []);
+
   if (isFetching) {
     return <FullScreenLoading />;
   }
@@ -93,7 +99,7 @@ export default function OrderEdit({ route, navigation }: Props) {
             data={employees.concat([
               mapUserToSelectOption(auth().currentUser as User),
             ])}
-            getLabel={item => item.displayName as string}
+            getLabel={getCreatorSelectionLabel}
             onChange={v => {
               setFieldValue('creator', v);
             }}

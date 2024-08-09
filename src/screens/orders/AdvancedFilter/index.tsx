@@ -1,17 +1,16 @@
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { Picker, View } from '@/components';
+import { Picker } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, makeStyles, useTheme } from '@rneui/themed';
-import DateTimePicker from '@/screens/order-edit/DateTimePicker';
-import { OrderFilter, Status } from '@/models/Order';
+import DateTimePicker from '@/components/DateTimePicker';
+import { OrderFilter } from '@/models/Order';
 import { defaultFilter, statusOptions } from '@/constants/order';
-import { endOfDay, format, startOfDay } from 'date-fns';
+import { format } from 'date-fns';
 
 type Props = {
   onSubmit(filter: Partial<OrderFilter>): void;
@@ -27,7 +26,7 @@ const Filter = forwardRef<BottomSheet, Props>(
         console.log('handleSheetChanges', index);
         if (index === -1) {
           console.log(propsFilter);
-          setFilter(propsFilter);
+          setFilter(propsFilter as OrderFilter);
         }
       },
       [propsFilter],

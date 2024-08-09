@@ -1,4 +1,4 @@
-import i18n from '@/i18';
+import i18n from '@/i18n';
 import { OrderFilter, Status } from '@/models/Order';
 import { endOfDay, endOfWeek, startOfDay, startOfWeek } from 'date-fns';
 

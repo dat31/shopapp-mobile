@@ -1,8 +1,8 @@
 import { StackParamList } from '@/navigator/order-stacks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Alert, FlatList, SectionList, TouchableOpacity } from 'react-native';
+import { Alert, SectionList, TouchableOpacity } from 'react-native';
 import OrderDetailItem from './OrderDetailItem';
-import { Button, Chip, Text } from '@rneui/themed';
+import { Button, Text } from '@rneui/themed';
 import formatCurrency from '@/utils/format-currency';
 import { FullScreenLoading, ListEmptyComponent, View } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -27,9 +27,9 @@ function OrderDetail({ route, navigation }: Props) {
   const { orderId } = route.params;
   const { mutate: increaseQtyMutate } = useIncreaseQtyMutation();
   const { mutate: decreaseQtyMutate } = useDecreaseQtyMutation();
-  const { mutate: updateStatusMutate } = useUpdateStatusMutation();
+  const { mutate: updateStatusMutate, isLoading: isLoadingUpdateStatus } =
+    useUpdateStatusMutation();
   const { mutate: deleteItemMutate } = useDeleteMutation();
-
   const { t } = useTranslation();
   const styles = useStyles();
   const { data: order, isLoading, isFetching } = useOrderDetailQuery(orderId);
@@ -81,6 +81,7 @@ function OrderDetail({ route, navigation }: Props) {
                     result: t('common.success'),
                   }),
                 );
+                navigation.popToTop();
               },
             },
           );
@@ -88,7 +89,7 @@ function OrderDetail({ route, navigation }: Props) {
       },
       { text: t('common.no') },
     ]);
-  }, [updateStatusMutate, id]);
+  }, [updateStatusMutate, id, navigation.popToTop]);
 
   const edit = useCallback(() => {
     if (!order) {
@@ -169,7 +170,6 @@ function OrderDetail({ route, navigation }: Props) {
               ListHeaderComponent: <OrderInformation order={order} />,
             }
           : {})}
-        contentContainerStyle={{ flexGrow: 1 }}
         ListEmptyComponent={
           <ListEmptyComponent icon="cube-outline" text="Order is empty" />
         }
@@ -186,9 +186,13 @@ function OrderDetail({ route, navigation }: Props) {
               <Text>{t('common.total')}</Text>
               <Text h4>{formatCurrency(total)}</Text>
             </View>
+            <View pt-lg>
+              <Button loading={isLoadingUpdateStatus} onPress={complete}>
+                Complete
+              </Button>
+            </View>
           </View>
         )}
-        style={{ flexGrow: 1 }}
         sections={[{ data: items as OrderItem[] }]}
         renderSectionHeader={({ section }) => {
           return (

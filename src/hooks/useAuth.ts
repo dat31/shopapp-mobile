@@ -10,7 +10,13 @@ export default function useAuth() {
       setUser(auth);
       console.log('auth', auth);
       storage.setUser(auth);
+
+      if (!auth) {
+        storage.removeToken();
+      }
+
       auth?.getIdTokenResult().then(idtoken => {
+        console.log('auth idtoken', idtoken);
         storage.setToken(idtoken);
       });
     });

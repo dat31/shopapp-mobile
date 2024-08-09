@@ -27,12 +27,9 @@ export type OrderItem = {
   note: string;
 };
 
-export type OrderFilter = PaginatedRequest<
-  Partial<
-    Order & {
-      from: Date;
-      to: Date;
-      order: Partial<{ [k in keyof Order]: SortDirection }>;
-    }
-  >
->;
+export type OrderDateFilter = {
+  from: Date;
+  to: Date;
+};
+
+export type OrderFilter = PaginatedRequest<Order & OrderDateFilter>;

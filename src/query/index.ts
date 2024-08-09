@@ -8,4 +8,9 @@ if (__DEV__) {
   });
 }
 
+export const PRODUCT_QUERY_KEY = 'products';
+export const ORDER_QUERY_KEY = 'orders';
+export const CATEGORY_QUERY_KEY = 'categories';
+export const EMPLOYEE_QUERY_KEY = 'employees';
+
 export default queryClient;

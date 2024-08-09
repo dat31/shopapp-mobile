@@ -1,6 +1,7 @@
 import { Order, OrderItem } from '@/models/Order';
-import { QUERY_KEY, useSetOrdersQueryData } from '@/query/queries/orders';
-import { service } from '@/services/axios';
+import { ORDER_QUERY_KEY } from '@/query';
+import { useSetOrdersQueryData } from '@/query/queries/orders';
+import orderItemService from '@/services/order-item-service';
 import { AxiosError, AxiosResponse } from 'axios';
 import { produce } from 'immer';
 import { useMutation, useQueryClient } from 'react-query';
@@ -12,13 +13,13 @@ export default function useUpdateMutation(orderId: Order['id']) {
   return useMutation<AxiosResponse<OrderItem>, AxiosError, Partial<OrderItem>>({
     mutationFn({ id, ...orderItem }) {
       const orderItemId = client
-        .getQueryData<Order>([QUERY_KEY, orderId])
+        .getQueryData<Order>([ORDER_QUERY_KEY, orderId])
         ?.items.find(item => item.product.id === orderItem?.product?.id)?.id;
 
       if (!orderItemId) {
         return Promise.reject();
       }
-      return service.patch<OrderItem>(`/order-items/${orderItemId}`, orderItem);
+      return orderItemService.update(orderItemId, orderItem) as any;
     },
     onSuccess(data) {
       // setQueryData(
@@ -43,7 +44,7 @@ export default function useUpdateMutation(orderId: Order['id']) {
       // );
 
       client.setQueryData<Order>(
-        [QUERY_KEY, orderId],
+        [ORDER_QUERY_KEY, orderId],
         produce(order => {
           if (!order) {
             return;

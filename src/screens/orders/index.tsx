@@ -19,7 +19,6 @@ import { useOrderStore } from './store';
 import { useTranslation } from 'react-i18next';
 import BasicFilter from './BasicFilter';
 import { isSameDay } from 'date-fns';
-import Hello from './Hello';
 
 type Props = NativeStackScreenProps<StackParamList, 'Orders'>;
 
@@ -100,7 +99,7 @@ function Orders({ navigation }: Props) {
     ref.current?.snapToIndex(0);
   }
 
-  function onSubmitFilter(filter: Partial<OrderFilter>) {
+  function onSubmitFilter(filter: OrderFilter) {
     setFilter(filter);
     ref.current?.close();
   }

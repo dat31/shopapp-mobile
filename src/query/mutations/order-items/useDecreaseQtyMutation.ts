@@ -1,6 +1,7 @@
 import { Order, OrderItem } from '@/models/Order';
-import { QUERY_KEY, useSetOrdersQueryData } from '@/query/queries/orders';
-import { service } from '@/services/axios';
+import { ORDER_QUERY_KEY } from '@/query';
+import { useSetOrdersQueryData } from '@/query/queries/orders';
+import orderItemService from '@/services/order-item-service';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { produce } from 'immer';
 import { useMutation, useQueryClient } from 'react-query';
@@ -9,23 +10,27 @@ export default function useDecreaseQtyMutation() {
   const client = useQueryClient();
   const setQueryData = useSetOrdersQueryData();
   return useMutation<
-    AxiosResponse<OrderItem>,
+    AxiosResponse<OrderItem | void>,
     AxiosError,
     { odId: Order['id']; odItem: OrderItem }
   >({
     mutationFn({ odId, odItem }) {
-      const order = client.getQueryData<Order>([QUERY_KEY, odId]) as Order;
+      const order = client.getQueryData<Order>([
+        ORDER_QUERY_KEY,
+        odId,
+      ]) as Order;
       const odItemIdx = order?.items.findIndex(
         item => item.product.id === odItem.product.id,
       ) as number;
 
       const currentQty = order.items[odItemIdx].quantity;
+      const { id } = order.items[odItemIdx];
 
       if (currentQty === 1) {
-        return service.delete(`/order-items/${order?.items[odItemIdx].id}`);
+        return orderItemService.delete(id) as any;
       }
 
-      return service.patch(`/order-items/${order?.items[odItemIdx].id}`, {
+      return orderItemService.update(id, {
         ...order.items[odItemIdx],
         quantity: order.items[odItemIdx].quantity - 1,
       });
@@ -50,7 +55,7 @@ export default function useDecreaseQtyMutation() {
         //   }),
         // );
         client.setQueryData(
-          [QUERY_KEY, odId],
+          [ORDER_QUERY_KEY, odId],
           produce<Order>(order => {
             order.items = order.items.filter(
               item => item.product.id !== odItem.product.id,
@@ -61,7 +66,7 @@ export default function useDecreaseQtyMutation() {
       }
 
       client.setQueryData(
-        [QUERY_KEY, odId],
+        [ORDER_QUERY_KEY, odId],
         produce<Order>(order => {
           const item = order.items.find(
             i => i.product.id === odItem.product.id,
@@ -69,7 +74,7 @@ export default function useDecreaseQtyMutation() {
           if (!item) {
             return;
           }
-          item.quantity = data.data.quantity;
+          item.quantity = (data.data as OrderItem).quantity;
         }),
       );
 

@@ -19,8 +19,7 @@ export const useProductStore = create<State>()(
         set({ filteredProducts: get().products });
         return;
       }
-      const filterPrdFn = (p: Product) =>
-        p.name.toLocaleLowerCase().includes(text);
+
       set({
         filteredProducts: get().products.filter(p =>
           p.name.toLocaleLowerCase().includes(text),

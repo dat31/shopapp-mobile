@@ -1,5 +1,5 @@
-import { Order, Status } from '@/models/Order';
-import { QUERY_KEY } from '@/query/queries/orders';
+import { Order } from '@/models/Order';
+import { ORDER_QUERY_KEY } from '@/query';
 import { service } from '@/services/axios';
 import { AxiosError, AxiosResponse } from 'axios';
 import { produce } from 'immer';
@@ -14,7 +14,7 @@ export default function useUpdateMutation() {
     },
     onSuccess(_, newData) {
       client.setQueryData<Order[]>(
-        QUERY_KEY,
+        ORDER_QUERY_KEY,
         produce(orders => {
           if (!orders) {
             return;
@@ -28,7 +28,7 @@ export default function useUpdateMutation() {
       );
 
       client.setQueryData(
-        [QUERY_KEY, newData.id],
+        [ORDER_QUERY_KEY, newData.id],
         produce(order => {
           order = assign(order, newData);
         }),

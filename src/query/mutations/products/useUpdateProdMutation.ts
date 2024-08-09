@@ -1,8 +1,7 @@
 import { Product } from '@/models/Product';
-import { QUERY_KEY } from '@/query/queries/products';
+import { PRODUCT_QUERY_KEY } from '@/query';
 import { service } from '@/services/axios';
 import { AxiosError, AxiosResponse } from 'axios';
-import { produce } from 'immer';
 import { isObject, isString } from 'lodash';
 import { UseMutationOptions, useMutation, useQueryClient } from 'react-query';
 
@@ -33,7 +32,7 @@ export default function useUpdateProdMutation(
       return service.patch(`/products/${id}`, prod);
     },
     onSuccess({ data }) {
-      client.invalidateQueries(QUERY_KEY);
+      client.invalidateQueries([PRODUCT_QUERY_KEY]);
       // client.setQueryData<Product[]>(
       //   QUERY_KEY,
       //   produce<Product[]>(products => {

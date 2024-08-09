@@ -1,14 +1,14 @@
 import { Order, OrderItem } from '@/models/Order';
-import { QUERY_KEY, useSetOrdersQueryData } from '@/query/queries/orders';
-import { useOrderStore } from '@/screens/orders/store';
-import { service } from '@/services/axios';
+import { ORDER_QUERY_KEY } from '@/query';
+import { useSetOrdersQueryData } from '@/query/queries/orders';
+import orderItemService from '@/services/order-item-service';
+import orderService from '@/services/order-service';
 import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { produce } from 'immer';
 import { useMutation, useQueryClient } from 'react-query';
 
 export default function useIncreaseQtyMutation() {
   const client = useQueryClient();
-  const { filter } = useOrderStore();
   const setQueryData = useSetOrdersQueryData();
   return useMutation<
     AxiosResponse<OrderItem>,
@@ -16,19 +16,19 @@ export default function useIncreaseQtyMutation() {
     { odId: Order['id']; odItem: OrderItem }
   >({
     mutationFn({ odId, odItem }) {
-      const order = client.getQueryData<Order>([QUERY_KEY, odId]) as Order;
+      const order = client.getQueryData<Order>([
+        ORDER_QUERY_KEY,
+        odId,
+      ]) as Order;
       const odItemIdx = order?.items.findIndex(
         item => item.product.id === odItem.product.id,
       ) as number;
 
       if (odItemIdx === -1) {
-        return service.post(`/orders/items/${odId}`, {
-          ...odItem,
-          quantity: 1,
-        });
+        return orderService.createItem(odId, { ...odItem, quantity: 1 });
       }
 
-      return service.patch(`/order-items/${order?.items[odItemIdx].id}`, {
+      return orderItemService.update(order?.items[odItemIdx].id, {
         ...order.items[odItemIdx],
         quantity: order.items[odItemIdx].quantity + 1,
       });
@@ -36,7 +36,7 @@ export default function useIncreaseQtyMutation() {
     onSuccess({ data, status }, { odId, odItem }) {
       if (status === HttpStatusCode.Created) {
         client.setQueryData(
-          [QUERY_KEY, odId],
+          [ORDER_QUERY_KEY, odId],
           produce(order => {
             order.items.push(data);
           }),
@@ -55,7 +55,7 @@ export default function useIncreaseQtyMutation() {
       }
 
       client.setQueryData(
-        [QUERY_KEY, odId],
+        [ORDER_QUERY_KEY, odId],
         produce<Order>(order => {
           const index = order.items.findIndex(item => item.id === data.id);
           order.items[index].quantity = data.quantity;

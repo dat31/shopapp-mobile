@@ -17,6 +17,13 @@ export type PaginatedResponse<T> = {
   previous?: number;
 };
 
-export type PaginatedRequest<T> = { take?: number; skip?: number } & T;
+export type BaseModel = {
+  id: number;
+};
+
+export type PaginatedRequest<T> = {
+  page: number;
+  order?: { [k in keyof T]: SortDirection };
+} & Partial<T>;
 
 export type ErrorResponse = AxiosError;

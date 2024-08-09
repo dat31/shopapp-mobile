@@ -1,11 +1,10 @@
 import { Product } from '@/models/Product';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Button, makeStyles, useTheme } from '@rneui/themed';
 import { StackParamList } from '@/navigator/product-stacks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { OrderItem } from '@/models/Order';
 import { useProductsQuery } from '@/query/queries/products';
-import { useOrderDetailQuery } from '@/query/queries/orders';
 import { FullScreenLoading, ProductList, View } from '@/components';
 import { useProductStore } from './store';
 import { useTranslation } from 'react-i18next';
@@ -14,9 +13,10 @@ type Props = {} & NativeStackScreenProps<StackParamList, 'Products'>;
 
 function Products({ navigation, route }: Props) {
   const { setProducts, filteredProducts, onFilter } = useProductStore();
-  const { isLoading } = useProductsQuery({
+  const { isLoading, data } = useProductsQuery({
     onSuccess: setProducts,
   });
+  console.log('product data', data);
   const { orderId, orderItemId } = (route.params || {}) as any;
   const { navigate, setOptions } = navigation;
   const styles = useStyles();

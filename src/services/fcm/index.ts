@@ -42,5 +42,5 @@ export async function init() {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log(remoteMessage);
   });
-  console.log('token', token);
+  console.log('fcm token', token);
 }

@@ -6,7 +6,7 @@ import { Input, InputProps } from '@rneui/themed';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TouchableHighlight, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 type Props = {
   value: Date;
